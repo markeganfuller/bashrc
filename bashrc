@@ -24,10 +24,10 @@ shopt -s checkwinsize
 if [[ $EUID -ne 0 ]];
 then
     # Normal User Prompt
-    PS1='${debian_chroot:+($debian_chroot)}\u[\j]:\W\$ '
+    PS1='${debian_chroot:+($debian_chroot)}\u[\j]:\W❱ '
 else
     # Root User Prompt
-    PS1='\e[0;31m${debian_chroot:+($debian_chroot)}\u[\j]:\W\$\e[m '
+    PS1='\e[0;31m${debian_chroot:+($debian_chroot)}\u[\j]:\W❱\e[m '
 fi
 
 # If this is an xterm set the title to user@host:dir
