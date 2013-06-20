@@ -76,6 +76,8 @@ alias lg="ls --color -lha | grep $1"
 alias lz="ls --color -lhS"
 
 alias grep="grep --color=auto"
+# Nice'd Bash, spawns a bash process with highest priority
+alias nicebash='sudo nice -n -20 bash'
 
 # i3 vim alias
 # Changes i3 Borders when entering / exiting vim
