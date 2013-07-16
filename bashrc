@@ -62,22 +62,25 @@ function cd()
     else
         builtin cd ~;
     fi
-    ls -lh --color;
+    ls -lh -G;
 }
 
 # Aliases
 # Not in seperate file for ease
 alias cls=clear
-alias cls2="clear; ls --color -lh"
+alias cls2="clear; ls -G -lh"
 
-alias ls="ls --color -lh"
-alias la="ls --color -lha"
-alias lg="ls --color -lha | grep $1"
-alias lz="ls --color -lhS"
+alias ls="ls -G -lh"
+alias la="ls -G -lha"
+alias lg="ls -G -lha | grep $1"
+alias lz="ls -G -lhS"
 
 alias grep="grep --color=auto"
 # Nice'd Bash, spawns a bash process with highest priority
 alias nicebash='sudo nice -n -20 bash'
+
+# Syntax Highlighted Cat, requires pip install pygments
+alias ccat="pygmentize -g"
 
 # i3 vim alias
 # Changes i3 Borders when entering / exiting vim
