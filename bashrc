@@ -81,6 +81,10 @@ alias nicebash='sudo nice -n -20 bash'
 
 # Syntax Highlighted Cat, requires pip install pygments
 alias ccat="pygmentize -g"
+function cless()
+{
+    pygmentize -g "$1" | less -R;
+}
 
 # i3 vim alias
 # Changes i3 Borders when entering / exiting vim
