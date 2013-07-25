@@ -72,10 +72,10 @@ alias cls2="clear; ls -G -lh"
 
 alias ls="ls -G -lh"
 alias la="ls -G -lha"
-alias lg="ls -G -lha | grep $1"
 alias lz="ls -G -lhS"
-
+alias lg="ls -G -lha | grep $1"
 alias grep="grep --color=auto"
+
 # Nice'd Bash, spawns a bash process with highest priority
 alias nicebash='sudo nice -n -20 bash'
 
