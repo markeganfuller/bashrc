@@ -67,19 +67,22 @@ function cd()
 
 # Aliases
 # Not in seperate file for ease
-alias cls=clear
-alias cls2="clear; ls -G -lh"
+alias cls="echo 'USE CTRL-L IDIOT'"
+alias cls2="echo 'USE CTRL-L IDIOT'"
+alias clear="echo 'USE CTRL-L IDIOT'"
 
 alias ls="ls -G -lh"
 alias la="ls -G -lha"
 alias lz="ls -G -lhS"
 alias lg="ls -G -lha | grep $1"
+alias ls2="/usr/bin/clear; ls"
+alias less="less -R"
 alias grep="grep --color=auto"
 
 # Nice'd Bash, spawns a bash process with highest priority
 alias nicebash='sudo nice -n -20 bash'
 
-# Syntax Highlighted Cat, requires pip install pygments
+# Syntax Highlighted cat / less, requires pip install pygments
 alias ccat="pygmentize -g"
 function cless()
 {
