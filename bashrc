@@ -7,10 +7,7 @@ then
     PATH=$PATH:$HOME/bin
 fi
 
-# don't put duplicate lines in the history.
-# don't overwrite GNU Midnight Commander's setting of `ignorespace'.
-HISTCONTROL=$HISTCONTROL${HISTCONTROL+:}ignoredups
-# ... or force ignoredups and ignorespace
+# force ignoredups and ignorespace
 HISTCONTROL=ignoreboth
 
 # append to the history file, don't overwrite it
@@ -32,14 +29,14 @@ fi
 
 # If this is an xterm set the title to user@host:dir
 case "$TERM" in
-xterm*|rxvt*)
-    PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
-    ;;
-*)
-    ;;
+    xterm*|rxvt*)
+        PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
+        ;;
+    *)
+        ;;
 esac
 
-# Set up editors
+# Set up editor
 export EDITOR='vim'
 export VISUAL='vim'
 
@@ -54,23 +51,16 @@ if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
     . /etc/bash_completion
 fi
 
-# Function for CD to enable cd then ls (auto)
-function cd()
-{
-    if [ -n "$1" ]; then
-        builtin cd "$1";
-    else
-        builtin cd ~;
-    fi
-    ls -lh -G;
-}
-
-# Aliases
+# --- Aliases ---
 # Not in seperate file for ease
+
+# So I finally discovered CTRL-L
 alias cls="echo 'USE CTRL-L IDIOT'"
 alias cls2="echo 'USE CTRL-L IDIOT'"
 alias clear="echo 'USE CTRL-L IDIOT'"
 
+# Note, on mac -G is for color on linux --color is for color.
+# Since I'm stuck on a mac FTM leaving it as -G
 alias ls="ls -G -lh"
 alias la="ls -G -lha"
 alias lz="ls -G -lhS"
@@ -82,8 +72,14 @@ alias grep="grep --color=auto"
 # Nice'd Bash, spawns a bash process with highest priority
 alias nicebash='sudo nice -n -20 bash'
 
-# Syntax Highlighted cat / less, requires pip install pygments
+# Rebind su, if su is needed /bin/su
+alias su='sudo bash'
+
+# These require pip install pygments
+# Syntax Highlighted cat
 alias ccat="pygmentize -g"
+
+# Syntax Highlighted less
 function cless()
 {
     pygmentize -g "$1" | less -R;
@@ -100,3 +96,16 @@ if hash i3-msg >/dev/null 2>&1; then
 else
     alias vim="vim"
 fi
+
+# Function to change dir then list replaces cd
+function cd()
+{
+    if [ -n "$1" ]; then
+        builtin cd "$1";
+    else
+        builtin cd ~;
+    fi
+    ls -lh -G;
+}
+
+
