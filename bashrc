@@ -108,4 +108,16 @@ function cd()
     ls -lh -G;
 }
 
+# cd to top level of git repo
+function cdg()
+{
+    builtin cd "$(git rev-parse --show-toplevel)"
+    ls -lh -G;
+}
+
+# Add ssh aliases
+if [ -f $HOME/.ssh_aliases ]
+then
+    source $HOME/.ssh_aliases
+fi
 
