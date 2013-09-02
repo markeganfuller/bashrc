@@ -121,9 +121,17 @@ function cdg()
     ls -lh -G;
 }
 
+# Search PWD for dir and change to it
+function bd ()
+{
+    RGX="s/(.*"$1"[^\/]*).*$/\1/i"
+    NEWPWD=$(pwd | perl -pe "$RGX")
+    echo $NEWPWD
+    cd "$NEWPWD"
+}
+
 # Add ssh aliases
 if [ -f $HOME/.ssh_aliases ]
 then
     source $HOME/.ssh_aliases
 fi
-
