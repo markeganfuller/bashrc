@@ -69,6 +69,11 @@ alias ls2="/usr/bin/clear; ls"
 alias less="less -R"
 alias grep="grep --color=auto"
 
+# Make Python a bit cleaner
+# -B don't make .pyc
+# -tt issue errors fron tab usage
+alias python="python -B -tt"
+
 # Nice'd Bash, spawns a bash process with highest priority
 alias nicebash='sudo nice -n -20 bash'
 
