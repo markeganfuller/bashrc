@@ -122,7 +122,7 @@ function cdg()
 }
 
 # Search PWD for dir and change to it
-function bd ()
+function cdb ()
 {
     RGX="s/(.*"$1"[^\/]*).*$/\1/i"
     NEWPWD=$(pwd | perl -pe "$RGX")
