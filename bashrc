@@ -70,7 +70,7 @@ alias lz="ls -G -lhS"
 alias lg="ls -G -lha | grep $1"
 alias less="less -R"  # Fix colors in less
 alias grep="grep --color=auto"
-alias grepr="grep --color=auto -inr $1 *"  # Grep Recursively for $1
+alias grepr="grep -inr $1 *"  # Grep Recursively for $1 #FIXME
 
 # Make Python a bit cleaner
 export PYTHONDONTWRITEBYTECODE=1
@@ -109,12 +109,18 @@ fi
 # Function to change dir then list replaces cd
 function cd()
 {
+    # Handle cd with/out args
     if [ -n "$1" ]; then
         builtin cd "$1";
     else
         builtin cd ~;
     fi
-    ls -lh -G;
+    # If in git repo print branch
+    if [ -d "./.git" ]; then
+        echo "Git Branch: $(git branch --color | grep \* | cut -f 2 -d ' ')";
+    fi
+    # List directory
+    ls -lh -G | grep -v "^total [0-9]*$";
 }
 
 # cd to top level of git repo
