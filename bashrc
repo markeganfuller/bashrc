@@ -40,6 +40,9 @@ esac
 export EDITOR='vim'
 export VISUAL='vim'
 
+# Technically I shouldn't force this...
+export TERM=xterm-256color
+
 # If login shell run vundle update
 if [ -d $HOME/.vim/bundle/vundle ] && shopt -q login_shell; then
     /usr/bin/vim +BundleInstall +qall
@@ -65,9 +68,9 @@ alias ls="ls -G -lh"
 alias la="ls -G -lha"
 alias lz="ls -G -lhS"
 alias lg="ls -G -lha | grep $1"
-alias ls2="/usr/bin/clear; ls"
-alias less="less -R"
+alias less="less -R"  # Fix colors in less
 alias grep="grep --color=auto"
+alias grepr="grep --color=auto -inr $1 *"  # Grep Recursively for $1
 
 # Make Python a bit cleaner
 export PYTHONDONTWRITEBYTECODE=1
