@@ -21,7 +21,7 @@ shopt -s checkwinsize
 if [[ $EUID -ne 0 ]];
 then
     # Normal User Prompt
-    PS1='${debian_chroot:+($debian_chroot)}\u[\j]:\W❱ '
+    PS1='${debian_chroot:+($debian_chroot)}\u[\j]:\W\e[0;31m❱\e[m '
 else
     # Root User Prompt
     PS1='\e[0;31m${debian_chroot:+($debian_chroot)}\u[\j]:\W❱\e[m '
@@ -72,6 +72,8 @@ alias less="less -R"  # Fix colors in less
 alias grep="grep --color=auto"
 alias grepr="grep -inr $1 *"  # Grep Recursively for $1 #FIXME
 
+alias gitgraph="git log --graph --full-history --all --oneline" # Show brnahc graph
+
 # Make Python a bit cleaner
 export PYTHONDONTWRITEBYTECODE=1
 
@@ -120,7 +122,7 @@ function cd()
         echo "Git Branch: $(git branch --color | grep \* | cut -f 2 -d ' ')";
     fi
     # List directory
-    ls -lh -G | grep -v "^total [0-9]*$";
+    ls -lh -G;
 }
 
 # cd to top level of git repo
