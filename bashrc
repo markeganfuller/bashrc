@@ -46,7 +46,7 @@ export TERM=xterm-256color
 # If login shell run vundle update
 if [ -d $HOME/.vim/bundle/vundle ] && shopt -q login_shell; then
     /usr/bin/vim +BundleInstall +qall
-    clear
+    /usr/bin/clear
 fi
 
 # enable programmable completion features
@@ -72,7 +72,11 @@ alias less="less -R"  # Fix colors in less
 alias grep="grep --color=auto"
 alias grepr="grep -inr $1 *"  # Grep Recursively for $1 #FIXME
 
-alias gitgraph="git log --graph --full-history --all --oneline" # Show brnahc graph
+alias vup="vagrant up --provision"
+alias vre="vagrant reload --provision"
+
+alias gitgraph="git log --graph --full-history --all --oneline" # Show full branch graph
+alias gitgraph_one="git log --graph --full-history --oneline" # Show single branch graph
 
 # Make Python a bit cleaner
 export PYTHONDONTWRITEBYTECODE=1
