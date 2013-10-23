@@ -2,28 +2,23 @@
 [ -z "$PS1" ] && return
 
 # Add home/bin to PATH
-if [ -d $HOME/bin ]
-then
+if [ -d $HOME/bin ]; then
     PATH=$PATH:$HOME/bin
 fi
 
-# force ignoredups and ignorespace
-HISTCONTROL=ignoreboth
-
-# append to the history file, don't overwrite it
-shopt -s histappend
+HISTCONTROL=ignoreboth  # force ignoredups and ignorespace
+shopt -s histappend     # append to the history file, don't overwrite it
 
 # check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.
 shopt -s checkwinsize
 
-# Setup Prompt, if root use a RED prompt
-if [[ $EUID -ne 0 ]];
-then
+# Setup Prompt
+if [[ $EUID -ne 0 ]]; then
     # Normal User Prompt
     PS1='${debian_chroot:+($debian_chroot)}\u[\j]:\W\e[0;31m$\e[m '
 else
-    # Root User Prompt
+    # Root User Prompt (red)
     PS1='\e[0;31m${debian_chroot:+($debian_chroot)}\u[\j]:\W#\e[m '
 fi
 
@@ -55,7 +50,7 @@ if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
 fi
 
 # --- Aliases ---
-# Not in seperate file for ease
+# Not in seperate file for ease of deployment
 
 # So I finally discovered CTRL-L
 alias cls="echo 'USE CTRL-L IDIOT'"
@@ -68,18 +63,15 @@ alias ls="ls -G -lh"
 alias la="ls -G -lha"
 alias lz="ls -G -lhS"
 alias lg="ls -G -lha | grep $1"
+
 alias less="less -R"  # Fix colors in less
+
 alias grep="grep --color=auto"
-alias grepr="grep -inr $1 *"  # Grep Recursively for $1 #FIXME
+alias grepr="grep -inr * -e $1"  # Grep Recursively for arg
 
-alias vup="vagrant up --provision"
-alias vre="vagrant reload --provision"
-
-alias gitgraph="git log --graph --full-history --all --oneline" # Show full branch graph
-alias gitgraph_one="git log --graph --full-history --oneline" # Show single branch graph
-
-# Make Python a bit cleaner
-export PYTHONDONTWRITEBYTECODE=1
+# Git Graphs
+alias gitgraph="git log --graph --full-history --all --oneline" # full graph
+alias gitgraph_one="git log --graph --full-history --oneline" # single branch
 
 # Make ipython nicer
 alias ipython="ipython --pprint --no-confirm-exit --no-banner --classic"
@@ -90,15 +82,9 @@ alias nicebash='sudo nice -n -20 bash'
 # Rebind su, if su is needed /bin/su
 alias su='sudo bash'
 
-# These require pip install pygments
-# Syntax Highlighted cat
-alias ccat="pygmentize -g"
-
-# Syntax Highlighted less
-function cless()
-{
-    pygmentize -g "$1" | less -R;
-}
+# ccat and cless require pip install pygments
+alias ccat="pygmentize -g"  # Syntax Highlighted cat
+function cless() { pygmentize -g "$1" | less -R; }  # Syntax Highlighted less
 
 # i3 vim alias
 # Changes i3 Borders when entering / exiting vim
@@ -112,10 +98,10 @@ else
     alias vim="vim"
 fi
 
-# Function to change dir then list replaces cd
+# Function to change dir then list, replaces cd
 function cd()
 {
-    # Handle cd with/out args
+    # If no args cd to home
     if [ -n "$1" ]; then
         builtin cd "$1";
     else
@@ -125,15 +111,13 @@ function cd()
     if [ -d "./.git" ]; then
         echo "Git Branch: $(git branch --color | grep \* | cut -f 2 -d ' ')";
     fi
-    # List directory
-    ls -lh -G;
+    ls -lh -G; # List directory
 }
 
 # cd to top level of git repo
 function cdg()
 {
-    builtin cd "$(git rev-parse --show-toplevel)"
-    ls -lh -G;
+    cd "$(git rev-parse --show-toplevel)"
 }
 
 # Search PWD for dir and change to it
@@ -146,7 +130,6 @@ function cdb ()
 }
 
 # Add ssh aliases
-if [ -f $HOME/.ssh_aliases ]
-then
+if [ -f $HOME/.ssh_aliases ]; then
     source $HOME/.ssh_aliases
 fi
