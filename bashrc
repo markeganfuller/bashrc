@@ -40,12 +40,6 @@ export VISUAL='vim'
 # Technically I shouldn't force this...
 export TERM=xterm-256color
 
-# If login shell run vundle update
-if [ -d $HOME/.vim/bundle/vundle ] && shopt -q login_shell; then
-    /usr/bin/vim +BundleInstall +qall
-    /usr/bin/clear
-fi
-
 # enable programmable completion features
 if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
     . /etc/bash_completion
