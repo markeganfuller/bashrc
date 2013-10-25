@@ -37,9 +37,6 @@ esac
 export EDITOR='vim'
 export VISUAL='vim'
 
-# Technically I shouldn't force this...
-export TERM=xterm-256color
-
 # enable programmable completion features
 if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
     . /etc/bash_completion
@@ -53,12 +50,10 @@ alias cls="echo 'USE CTRL-L IDIOT'"
 alias cls2="echo 'USE CTRL-L IDIOT'"
 alias clear="echo 'USE CTRL-L IDIOT'"
 
-# Note, on mac -G is for color on linux --color is for color.
-# Since I'm stuck on a mac FTM leaving it as -G
-alias ls="ls -G -lh"
-alias la="ls -G -lha"
-alias lz="ls -G -lhS"
-alias lg="ls -G -lha | grep $1"
+alias ls="ls --color -lh"
+alias la="ls --color -lha"
+alias lz="ls --color -lhS"
+alias lg="ls --color -lha | grep $1"
 
 alias less="less -R"  # Fix colors in less
 
