@@ -5,6 +5,8 @@
 if [ -d $HOME/bin ]; then
     PATH=$PATH:$HOME/bin
 fi
+# Add /sbin to PATH
+PATH=$PATH:/sbin
 
 HISTCONTROL=ignoreboth  # force ignoredups and ignorespace
 shopt -s histappend     # append to the history file, don't overwrite it
