@@ -72,6 +72,7 @@ alias nicebash='sudo nice -n -20 bash'
 
 # Rebind su, if su is needed /bin/su
 alias su='sudo bash'
+alias sudo='sudo ' # Fixes bash ignoring aliases after sudo
 
 # ccat and cless require pip install pygments
 alias ccat="pygmentize -g"  # Syntax Highlighted cat
@@ -82,7 +83,7 @@ function cless() { pygmentize -g "$1" | less -R; }  # Syntax Highlighted less
 if hash i3-msg >/dev/null 2>&1; then
     function vim() {
         i3-msg border 1pixel >/dev/null 2>&1;
-        /usr/bin/vim "$@";
+        /usr/local/bin/vim "$@";
         i3-msg border normal >/dev/null 2>&1;
     }
 else
@@ -119,8 +120,3 @@ function cdb ()
     echo $NEWPWD
     cd "$NEWPWD"
 }
-
-# Add ssh aliases
-if [ -f $HOME/.ssh_aliases ]; then
-    source $HOME/.ssh_aliases
-fi
