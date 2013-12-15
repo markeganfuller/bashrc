@@ -60,12 +60,14 @@ alias less="less -R"  # Fix colors in less
 alias grep="grep --color=auto"
 alias grepr="grep -inr * -e $1"  # Grep Recursively for arg
 
+alias mysql="mysql --auto-rehash --auto-vertical-output"
+
 # Git Graphs
 alias gitgraph="git log --graph --full-history --all --oneline" # full graph
 alias gitgraph_one="git log --graph --full-history --oneline" # single branch
 
 # Make ipython nicer
-alias ipython="ipython --pprint --no-confirm-exit --no-banner --classic"
+alias ipython="ipython --no-confirm-exit --no-banner --classic --pprint"
 
 # Nice'd Bash, spawns a bash process with highest priority
 alias nicebash='sudo nice -n -20 bash'
@@ -73,6 +75,9 @@ alias nicebash='sudo nice -n -20 bash'
 # Rebind su, if su is needed /bin/su
 alias su='sudo bash'
 alias sudo='sudo ' # Fixes bash ignoring aliases after sudo
+
+# Syslog
+alias sl='sudo tail -f /var/log/syslog'
 
 # ccat and cless require pip install pygments
 alias ccat="pygmentize -g"  # Syntax Highlighted cat
