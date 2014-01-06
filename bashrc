@@ -6,9 +6,15 @@ if [ -d $HOME/bin ]; then
     PATH=$PATH:$HOME/bin
 fi
 # Add /sbin to PATH
-PATH=$PATH:/sbin
+if [ -d /sbin ]; then
+    PATH=$PATH:/sbin
+fi
 
-HISTCONTROL=ignoreboth  # force ignoredups and ignorespace
+# ignoreboth
+# ignoredups (no duplicates)
+# ignorespace (ignore lines starting with space)
+HISTCONTROL=ignoreboth
+
 shopt -s histappend     # append to the history file, don't overwrite it
 
 # check the window size after each command and, if necessary,
@@ -18,10 +24,10 @@ shopt -s checkwinsize
 # Setup Prompt
 if [[ $EUID -ne 0 ]]; then
     # Normal User Prompt
-    PS1='${debian_chroot:+($debian_chroot)}\u[\j]:\W\e[0;31m$\e[m '
+    PS1='${debian_chroot:+($debian_chroot)}\u[\j]:\W\[\033[031m\]$\[\033[0m\] '
 else
     # Root User Prompt (red)
-    PS1='\e[0;31m${debian_chroot:+($debian_chroot)}\u[\j]:\W#\e[m '
+    PS1='\[\033[0;31m\]${debian_chroot:+($debian_chroot)}\u[\j]:\W#\[\033[0m\] '
 fi
 
 # If this is an xterm set the title to user@host:dir
