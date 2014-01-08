@@ -131,3 +131,10 @@ function cdb ()
     echo $NEWPWD
     cd "$NEWPWD"
 }
+
+# Disable crontab -r
+function crontab ()
+{
+    # Replace -r with -e
+    /usr/bin/crontab "${@/-r/-e}"
+}
