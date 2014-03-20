@@ -94,7 +94,7 @@ function cless() { pygmentize -g "$1" | less -R; }  # Syntax Highlighted less
 if hash i3-msg >/dev/null 2>&1; then
     function vim() {
         i3-msg border 1pixel >/dev/null 2>&1;
-        /usr/local/bin/vim "$@";
+        /usr/bin/env vim "$@";
         i3-msg border normal >/dev/null 2>&1;
     }
 else
