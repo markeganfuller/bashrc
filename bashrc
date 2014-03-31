@@ -138,3 +138,21 @@ function crontab ()
     # Replace -r with -e
     /usr/bin/crontab "${@/-r/-e}"
 }
+
+# Vagrant recreate
+function vrecreate ()
+{
+    MACHINE=$1
+    vagrant destroy -f ${MACHINE} && vagrant up ${MACHINE}
+}
+
+# Highlight Pattern
+# highlights a pattern in output
+# Usage: hlp CMD PATTERN
+# commands with args should be in quotes
+function hlp ()
+{
+    CMD=$1
+    PATTERN=$2
+    ${CMD} 2>&1 | egrep --color "${PATTERN}|$"
+}
