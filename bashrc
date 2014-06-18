@@ -22,13 +22,27 @@ shopt -s histappend     # append to the history file, don't overwrite it
 shopt -s checkwinsize
 
 # Setup Prompt
-if [[ $EUID -ne 0 ]]; then
-    # Normal User Prompt
-    PS1='${debian_chroot:+($debian_chroot)}\u[\j]:\W\[\033[031m\]$\[\033[0m\] '
-else
-    # Root User Prompt (red)
-    PS1='\[\033[0;31m\]${debian_chroot:+($debian_chroot)}\u[\j]:\W#\[\033[0m\] '
-fi
+export PROMPT_COMMAND=__prompt_command
+
+function __prompt_command() {
+    EXIT="$?"
+    EXIT_COLOR=""
+
+    C_RED='\[\e[0;31m\]'
+    C_CLR='\[\e[0m\]'
+
+    if [ $EXIT != 0 ]; then
+        EXIT_COLOR=$C_RED
+    fi
+
+    if [[ $EUID -ne 0 ]]; then
+        # Normal User Prompt
+        PS1="${debian_chroot:+($debian_chroot)}\u[${EXIT_COLOR}${EXIT}${C_CLR}]:\W${C_RED}\$${C_CLR} "
+    else
+        # Root User Prompt (red)
+        PS1="${C_RED}${debian_chroot:+($debian_chroot)}\u${C_CLR}[${EXIT_COLOR}${EXIT}${C_CLR}]${C_RED}:\W#${C_CLR} "
+    fi
+}
 
 # If this is an xterm set the title to user@host:dir
 case "$TERM" in
@@ -71,6 +85,8 @@ alias mysql="mysql --auto-rehash --auto-vertical-output"
 # Git Graphs
 alias gitgraph="git log --graph --full-history --all --oneline" # full graph
 alias gitgraph_one="git log --graph --full-history --oneline" # single branch
+# Diff after git pull
+alias gitdiffpull="git diff master@{1} master"
 
 # Make ipython nicer
 alias ipython="ipython --no-confirm-exit --no-banner --classic --pprint"
