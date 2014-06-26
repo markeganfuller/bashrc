@@ -90,7 +90,7 @@ alias gitdiffpull="git diff master@{1} master"
 # Git howtos, echo some useful instructions
 # How to merge with rebase
 alias gitmergerebase="echo 'git merge master <branch to merge>'"
-alias gitundocommit="echo 'git reset --soft HEAD^"
+alias gitundocommit="echo 'git reset --soft HEAD^'"
 
 # Make ipython nicer
 alias ipython="ipython --no-confirm-exit --no-banner --classic --pprint"
