@@ -162,8 +162,8 @@ function crontab ()
 # Vagrant recreate
 function vrecreate ()
 {
-    MACHINE=$1
-    vagrant destroy -f ${MACHINE} && vagrant up ${MACHINE}
+    MACHINES=$@
+    vagrant destroy -f ${MACHINES} && vagrant up ${MACHINES}
 }
 
 # Highlight Pattern
