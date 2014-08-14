@@ -25,6 +25,11 @@ shopt -s checkwinsize
 export PROMPT_COMMAND=__prompt_command
 
 function __prompt_command() {
+    VENV="${VIRTUAL_ENV}"
+    if [ ! -z $VENV ]; then
+        VENV="($(basename ${VENV}))"
+    fi
+
     EXIT="$?"
     EXIT_COLOR=""
 
@@ -37,10 +42,10 @@ function __prompt_command() {
 
     if [[ $EUID -ne 0 ]]; then
         # Normal User Prompt
-        PS1="${debian_chroot:+($debian_chroot)}\u[${EXIT_COLOR}${EXIT}${C_CLR}]:\W${C_RED}\$${C_CLR} "
+        PS1="${VENV}${debian_chroot:+($debian_chroot)}\u[${EXIT_COLOR}${EXIT}${C_CLR}]:\W${C_RED}\$${C_CLR} "
     else
         # Root User Prompt (red)
-        PS1="${C_RED}${debian_chroot:+($debian_chroot)}\u${C_CLR}[${EXIT_COLOR}${EXIT}${C_CLR}]${C_RED}:\W#${C_CLR} "
+        PS1="${VENV}${C_RED}${debian_chroot:+($debian_chroot)}\u${C_CLR}[${EXIT_COLOR}${EXIT}${C_CLR}]${C_RED}:\W#${C_CLR} "
     fi
 }
 
@@ -61,6 +66,12 @@ export VISUAL='vim'
 if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
     . /etc/bash_completion
 fi
+
+# Setup Virtual Env Wrapper
+export WORKON_HOME=${HOME}/.virtualenvs
+#export PROJECT_HOME=${HOME}/repos
+source /usr/local/bin/virtualenvwrapper.sh
+
 
 # --- Aliases ---
 # Not in seperate file for ease of deployment
