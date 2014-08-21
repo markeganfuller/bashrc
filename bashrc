@@ -25,13 +25,13 @@ shopt -s checkwinsize
 export PROMPT_COMMAND=__prompt_command
 
 function __prompt_command() {
+    EXIT="$?"
+    EXIT_COLOR=""
+
     VENV="${VIRTUAL_ENV}"
     if [ ! -z $VENV ]; then
         VENV="($(basename ${VENV}))"
     fi
-
-    EXIT="$?"
-    EXIT_COLOR=""
 
     C_RED='\[\e[0;31m\]'
     C_CLR='\[\e[0m\]'
