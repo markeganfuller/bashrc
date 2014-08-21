@@ -89,6 +89,7 @@ alias lg="ls --color -lha | grep $1"
 alias less="less -R"  # Fix colors in less
 
 alias grep="grep --color=auto"
+alias egrep="egrep --color=auto"
 alias grepr="grep -inr * -e $1"  # Grep Recursively for arg
 
 alias mysql="mysql --auto-rehash --auto-vertical-output"
