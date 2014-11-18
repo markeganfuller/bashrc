@@ -81,10 +81,11 @@ alias cls="echo 'USE CTRL-L IDIOT'"
 alias cls2="echo 'USE CTRL-L IDIOT'"
 alias clear="echo 'USE CTRL-L IDIOT'"
 
-alias ls="ls --color -lh"
-alias la="ls --color -lha"
-alias lz="ls --color -lhS"
-alias lg="ls --color -lha | grep $1"
+# LC_COLLATE=C makes underscores sort before a
+alias ls="LC_COLLATE=C ls --color -lh"
+alias la="ls -a"
+alias lz="ls -S"
+alias lg="ls -a | grep $1"
 
 alias less="less -R"  # Fix colors in less
 
@@ -117,6 +118,9 @@ alias sudo='sudo ' # Fixes bash ignoring aliases after sudo
 # Syslog
 alias sl='sudo tail -f /var/log/syslog'
 
+# Clear SSH Sockets
+alias clear_sockets='rm -r ~/.ssh/sockets/*'
+
 # ccat and cless require pip install pygments
 alias ccat="pygmentize -g"  # Syntax Highlighted cat
 function cless() { pygmentize -g "$1" | less -R; }  # Syntax Highlighted less
@@ -146,7 +150,7 @@ function cd()
     if [ -d "./.git" ]; then
         echo "Git Branch: $(git branch --color | grep \* | cut -f 2 -d ' ')";
     fi
-    ls -lh -G; # List directory
+    ls; # List directory
 }
 
 # cd to top level of git repo
