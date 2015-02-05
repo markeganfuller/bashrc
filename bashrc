@@ -133,18 +133,6 @@ alias run_httpbin='python -m httpbin.core'
 alias ccat="pygmentize -g"  # Syntax Highlighted cat
 function cless() { pygmentize -g "$1" | less -R; }  # Syntax Highlighted less
 
-# i3 vim alias
-# Changes i3 Borders when entering / exiting vim
-if hash i3-msg >/dev/null 2>&1; then
-    function vim() {
-        i3-msg border 1pixel >/dev/null 2>&1;
-        /usr/bin/env vim "$@";
-        i3-msg border normal >/dev/null 2>&1;
-    }
-else
-    alias vim="vim"
-fi
-
 # Function to change dir then list, replaces cd
 function cd()
 {
