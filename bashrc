@@ -15,6 +15,10 @@ fi
 # ignorespace (ignore lines starting with space)
 HISTCONTROL=ignoreboth
 
+# Unlimited history
+export HISTFILESIZE=
+export HISTSIZE=
+
 shopt -s histappend     # append to the history file, don't overwrite it
 
 # check the window size after each command and, if necessary,
@@ -121,6 +125,10 @@ alias sl='sudo tail -f /var/log/syslog'
 # Clear SSH Sockets
 alias clear_sockets='rm -r ~/.ssh/sockets/*'
 
+# Local HTTPBIN server https://github.com/Runscope/httpbin
+# pip install httpbin
+alias run_httpbin='python -m httpbin.core'
+
 # ccat and cless require pip install pygments
 alias ccat="pygmentize -g"  # Syntax Highlighted cat
 function cless() { pygmentize -g "$1" | less -R; }  # Syntax Highlighted less
@@ -148,7 +156,8 @@ function cd()
     fi
     # If in git repo print branch
     if [ -d "./.git" ]; then
-        echo "Git Branch: $(git branch --color | grep \* | cut -f 2 -d ' ')";
+        GIT_STATUS=$(git branch --color | grep \* | cut --complement -f 1 -d ' ')
+        echo "Git Branch: ${GIT_STATUS}";
     fi
     ls; # List directory
 }
@@ -180,6 +189,13 @@ function vrecreate ()
 {
     MACHINES=$@
     vagrant destroy -f ${MACHINES} && vagrant up ${MACHINES}
+}
+
+# Vagrant startup, start all machines that were running
+function vstartup ()
+{
+    MACHINES=$(vagrant status | grep poweroff | cut -d ' ' -f 1 | tr "\n" " ")
+    vagrant up ${MACHINES}
 }
 
 # Highlight Pattern
