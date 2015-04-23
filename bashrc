@@ -125,6 +125,8 @@ alias sl='sudo tail -f /var/log/syslog'
 # Clear SSH Sockets
 alias clear_sockets='rm -r ~/.ssh/sockets/*'
 
+# Screen shots
+alias screenshooter='xfce4-screenshooter'
 # Local HTTPBIN server https://github.com/Runscope/httpbin
 # pip install httpbin
 alias run_httpbin='python -m httpbin.core'
