@@ -100,7 +100,7 @@ alias grepr="grep -inr * -e $1"  # Grep Recursively for arg
 alias mysql="mysql --auto-rehash --auto-vertical-output"
 
 # Git Graphs
-alias gitgraph="git log --graph --full-history --all --oneline" # full graph
+alias gitgraph="git log --graph --full-history --all --oneline --decorate" # full graph
 alias gitgraph_one="git log --graph --full-history --oneline" # single branch
 # Diff after git pull
 alias gitdiffpull="git diff master@{1} master"
