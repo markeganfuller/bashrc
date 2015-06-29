@@ -80,10 +80,7 @@ source /usr/bin/virtualenvwrapper.sh
 # --- Aliases ---
 # Not in seperate file for ease of deployment
 
-# So I finally discovered CTRL-L
-alias cls="echo 'USE CTRL-L IDIOT'"
-alias cls2="echo 'USE CTRL-L IDIOT'"
-alias clear="echo 'USE CTRL-L IDIOT'"
+alias units="units --verbose --one-line"
 
 # LC_COLLATE=C makes underscores sort before a
 alias ls="LC_COLLATE=C ls --color -lh"
@@ -118,9 +115,6 @@ alias nicebash='sudo nice -n -20 bash'
 # Rebind su, if su is needed /bin/su
 alias su='sudo bash'
 alias sudo='sudo ' # Fixes bash ignoring aliases after sudo
-
-# Syslog
-alias sl='sudo tail -f /var/log/syslog'
 
 # Clear SSH Sockets
 alias clear_sockets='rm -r ~/.ssh/sockets/*'
