@@ -25,20 +25,31 @@ shopt -s histappend     # append to the history file, don't overwrite it
 # update the values of LINES and COLUMNS.
 shopt -s checkwinsize
 
+# Set TERM
+TERM=xterm-256color
+
 # Setup Prompt
 export PROMPT_COMMAND=__prompt_command
 
 function __prompt_command() {
     EXIT="$?"
     EXIT_COLOR=""
+    C_RED='\[\e[0;31m\]'
+    C_OIB='\[\e[0;100m\]'
+    C_CLR='\[\e[0m\]'
+
+    CUR_DIR_NAME=$(basename $(pwd))
+    if [ -e $HOME/.virtualenvs/${CUR_DIR_NAME} ]; then
+        workon $CUR_DIR_NAME
+    else
+        deactivate 2&>1 > /dev/null
+    fi
 
     VENV="${VIRTUAL_ENV}"
     if [ ! -z $VENV ]; then
-        VENV="($(basename ${VENV}))"
+        VENV="(${C_OIB}$(basename ${VENV})${C_CLR})"
     fi
 
-    C_RED='\[\e[0;31m\]'
-    C_CLR='\[\e[0m\]'
 
     if [ $EXIT != 0 ]; then
         EXIT_COLOR=$C_RED
