@@ -42,7 +42,7 @@ function __prompt_command() {
     if [ -e $HOME/.virtualenvs/${CUR_DIR_NAME} ]; then
         workon $CUR_DIR_NAME
     else
-        deactivate 2&>1 > /dev/null
+        deactivate > /dev/null 2>&1
     fi
 
     VENV="${VIRTUAL_ENV}"
