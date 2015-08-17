@@ -39,9 +39,13 @@ function __prompt_command() {
     C_CLR='\[\e[0m\]'
 
     CUR_DIR_NAME=$(basename $(pwd))
+
     if [ -e $HOME/.virtualenvs/${CUR_DIR_NAME} ]; then
-        workon $CUR_DIR_NAME
-    else
+        VENV_BASENAME=$(basename "${VIRTUAL_ENV}")
+        if [ "${VENV_BASENAME}" != "${CUR_DIR_NAME}" ]; then
+            workon $CUR_DIR_NAME
+        fi
+    elif [ ! -z $VIRTUAL_ENV ] ; then
         deactivate > /dev/null 2>&1
     fi
 
