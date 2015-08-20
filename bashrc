@@ -111,6 +111,8 @@ alias grepr="grep -inr * -e $1"  # Grep Recursively for arg
 
 alias mysql="mysql --auto-rehash --auto-vertical-output"
 
+alias packer=packer-io
+
 # Git Graphs
 alias gitgraph="git log --graph --full-history --all --oneline --decorate" # full graph
 alias gitgraph_one="git log --graph --full-history --oneline" # single branch
@@ -206,4 +208,13 @@ function hlp ()
     CMD=$1
     PATTERN=$2
     ${CMD} 2>&1 | egrep --color "${PATTERN}|$"
+}
+
+function todos ()
+{
+    echo -e "\n--- XXXs"
+    grep -nr 'XXX'
+    echo -e "\n--- To Dos"
+    grep -nr 'TODO'
+    echo ""
 }
