@@ -82,9 +82,7 @@ if ! pgrep ssh-agent > /dev/null; then
     ssh-agent > ~/.ssh/agent_config
     ssh-add
 fi
-if [[ "$SSH_AGENT_PID" == "" ]]; then
-    eval $(<~/.ssh/agent_config)
-fi
+eval $(<~/.ssh/agent_config) > /dev/null
 
 # Set up editor
 export EDITOR='vim'
