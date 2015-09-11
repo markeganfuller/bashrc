@@ -77,6 +77,15 @@ case "$TERM" in
         ;;
 esac
 
+# Set up ssh-agent
+if ! pgrep ssh-agent > /dev/null; then
+    ssh-agent > ~/.ssh/agent_config
+    ssh-add
+fi
+if [[ "$SSH_AGENT_PID" == "" ]]; then
+    eval $(<~/.ssh/agent_config)
+fi
+
 # Set up editor
 export EDITOR='vim'
 export VISUAL='vim'
