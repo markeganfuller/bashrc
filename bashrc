@@ -80,9 +80,11 @@ esac
 # Set up ssh-agent
 if ! pgrep ssh-agent > /dev/null; then
     ssh-agent > ~/.ssh/agent_config
+    eval $(<~/.ssh/agent_config) > /dev/null
     ssh-add
+else
+    eval $(<~/.ssh/agent_config) > /dev/null
 fi
-eval $(<~/.ssh/agent_config) > /dev/null
 
 # Set up editor
 export EDITOR='vim'
