@@ -68,24 +68,6 @@ function __prompt_command() {
     fi
 }
 
-# If this is an xterm set the title to user@host:dir
-case "$TERM" in
-    xterm*|rxvt*)
-        PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
-        ;;
-    *)
-        ;;
-esac
-
-# Set up ssh-agent
-if ! pgrep ssh-agent > /dev/null; then
-    ssh-agent > ~/.ssh/agent_config
-    eval $(<~/.ssh/agent_config) > /dev/null
-    ssh-add
-else
-    eval $(<~/.ssh/agent_config) > /dev/null
-fi
-
 # Set up editor
 export EDITOR='vim'
 export VISUAL='vim'
@@ -97,20 +79,19 @@ fi
 
 # Setup Virtual Env Wrapper
 export WORKON_HOME=${HOME}/.virtualenvs
-#export PROJECT_HOME=${HOME}/repos
 source /usr/bin/virtualenvwrapper.sh
 
 
 # --- Aliases ---
 # Not in seperate file for ease of deployment
-
+alias tableflip="echo '(╯°□°）╯︵ ┻━┻'"
 alias units="units --verbose --one-line"
+
+# Vim without plugins
+alias vimm="vim -u NONE"
 
 # LC_COLLATE=C makes underscores sort before a
 alias ls="LC_COLLATE=C ls --color -lh"
-alias la="ls -a"
-alias lz="ls -S"
-alias lg="ls -a | grep $1"
 
 alias less="less -R"  # Fix colors in less
 
@@ -125,8 +106,15 @@ alias packer=packer-io
 # Git Graphs
 alias gitgraph="git log --graph --full-history --all --oneline --decorate" # full graph
 alias gitgraph_one="git log --graph --full-history --oneline" # single branch
+
 # Diff after git pull
-alias gitdiffpull="git diff master@{1} master"
+function gitdiffpull {
+    branch=$(git branch | grep \* | cut --complement -f 1 -d ' ')
+    echo $branch
+    # @{1} gets the previous state of the branch.
+    git diff ${branch}@{1} ${branch}
+}
+
 # Git howtos, echo some useful instructions
 # How to merge with rebase
 alias gitmergerebase="echo 'git merge master <branch to merge>'"
@@ -197,24 +185,6 @@ function vrecreate ()
 {
     MACHINES=$@
     vagrant destroy -f ${MACHINES} && vagrant up ${MACHINES}
-}
-
-# Vagrant startup, start all machines that were running
-function vstartup ()
-{
-    MACHINES=$(vagrant status | grep poweroff | cut -d ' ' -f 1 | tr "\n" " ")
-    vagrant up ${MACHINES}
-}
-
-# Highlight Pattern
-# highlights a pattern in output
-# Usage: hlp CMD PATTERN
-# commands with args should be in quotes
-function hlp ()
-{
-    CMD=$1
-    PATTERN=$2
-    ${CMD} 2>&1 | egrep --color "${PATTERN}|$"
 }
 
 function todos ()
