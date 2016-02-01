@@ -38,6 +38,7 @@ function __prompt_command() {
     C_OIB='\[\e[0;100m\]'
     C_CLR='\[\e[0m\]'
 
+    # Auto find and source venv
     CUR_DIR_NAME=$(basename $(pwd))
 
     if [ -e $HOME/.virtualenvs/${CUR_DIR_NAME} ]; then
@@ -49,22 +50,29 @@ function __prompt_command() {
         deactivate > /dev/null 2>&1
     fi
 
+    # Display venv in prompt
     VENV="${VIRTUAL_ENV}"
     if [ ! -z $VENV ]; then
         VENV="(${C_OIB}$(basename ${VENV})${C_CLR})"
     fi
 
-
+    # Color exit code if not 0
     if [ $EXIT != 0 ]; then
         EXIT_COLOR=$C_RED
     fi
 
+    # Show hostname if connected via SSH
+    SSH=''
+    if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ] || pstree $$ -s | grep ssh -q ; then
+        SSH='@\h'
+    fi
+
     if [[ $EUID -ne 0 ]]; then
         # Normal User Prompt
-        PS1="${VENV}${debian_chroot:+($debian_chroot)}\u[${EXIT_COLOR}${EXIT}${C_CLR}]:\W${C_RED}\$${C_CLR} "
+        PS1="${VENV}${debian_chroot:+($debian_chroot)}\u${SSH}[${EXIT_COLOR}${EXIT}${C_CLR}]:\W${C_RED}\$${C_CLR} "
     else
         # Root User Prompt (red)
-        PS1="${VENV}${C_RED}${debian_chroot:+($debian_chroot)}\u${C_CLR}[${EXIT_COLOR}${EXIT}${C_CLR}]${C_RED}:\W#${C_CLR} "
+        PS1="${VENV}${C_RED}${debian_chroot:+($debian_chroot)}\u${SSH}${C_CLR}[${EXIT_COLOR}${EXIT}${C_CLR}]${C_RED}:\W#${C_CLR} "
     fi
 }
 
