@@ -9,7 +9,10 @@ fi
 if [ -d /sbin ]; then
     PATH=$PATH:/sbin
 fi
-
+# Add /home/markeganfuller/.gem/ruby/2.2.0/bin to PATH
+if [ -d /home/markeganfuller/.gem/ruby/2.2.0/bin ]; then
+    PATH=$PATH:/home/markeganfuller/.gem/ruby/2.2.0/bin
+fi
 # ignoreboth
 # ignoredups (no duplicates)
 # ignorespace (ignore lines starting with space)
@@ -39,7 +42,7 @@ function __prompt_command() {
     C_CLR='\[\e[0m\]'
 
     # Auto find and source venv
-    CUR_DIR_NAME=$(basename $(pwd))
+    CUR_DIR_NAME=$(basename "$(pwd)")
 
     if [ -e $HOME/.virtualenvs/${CUR_DIR_NAME} ]; then
         VENV_BASENAME=$(basename "${VIRTUAL_ENV}")
@@ -53,7 +56,7 @@ function __prompt_command() {
     # Display venv in prompt
     VENV="${VIRTUAL_ENV}"
     if [ ! -z $VENV ]; then
-        VENV="(${C_OIB}$(basename ${VENV})${C_CLR})"
+        VENV="(${C_OIB}$(basename "${VENV})${C_CLR}")"
     fi
 
     # Color exit code if not 0
@@ -124,9 +127,8 @@ function gitdiffpull {
 }
 
 # Git howtos, echo some useful instructions
-# How to merge with rebase
-alias gitmergerebase="echo 'git merge master <branch to merge>'"
 alias gitundocommit="echo 'git reset --soft HEAD^'"
+alias gitundomerge="echo 'git reset --hard ORIG_HEAD^'"
 
 # Make ipython nicer
 alias ipython="ipython --no-confirm-exit --no-banner --classic --pprint"
