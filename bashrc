@@ -131,7 +131,7 @@ alias gitundocommit="echo 'git reset --soft HEAD^'"
 alias gitundomerge="echo 'git reset --hard ORIG_HEAD^'"
 
 # Make ipython nicer
-alias ipython="ipython --no-confirm-exit --no-banner --classic --pprint"
+alias ipython="ipython --no-confirm-exit --no-banner --pprint"
 
 # Nice'd Bash, spawns a bash process with highest priority
 alias nicebash='sudo nice -n -20 bash'
