@@ -205,3 +205,24 @@ function todos ()
     grep -nr 'TODO'
     echo ""
 }
+
+function archwiki-search ()
+{
+    SEARCH=$1
+    TOP_ONLY=$2
+    WIKI_LANG='en'
+    WIKI_BASEDIR='/usr/share/doc/arch-wiki/html'
+    WIKIDIR="${WIKI_BASEDIR}/${WIKI_LANG}/"
+
+    # Remove files with no hits
+    # Split out the count for easy sorting
+    # Sort by number of hits
+    ret=$(grep -irc ${SEARCH} ${WIKIDIR} \
+          | grep -v ":0" \
+          | sed 's/:\([0-9]\+\)$/ \1/' \
+          | sort -t' ' -k 2 -n -r)
+
+    top=$(echo "${ret}" | head -n 5)
+    out=$(echo "${top}" | sed 's|^|file://|')
+    echo -e "\n${out}\n"
+}
