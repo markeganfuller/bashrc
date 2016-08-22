@@ -209,7 +209,6 @@ function todos ()
 function archwiki-search ()
 {
     SEARCH=$1
-    TOP_ONLY=$2
     WIKI_LANG='en'
     WIKI_BASEDIR='/usr/share/doc/arch-wiki/html'
     WIKIDIR="${WIKI_BASEDIR}/${WIKI_LANG}/"
