@@ -13,16 +13,15 @@ fi
 if [ -d /home/markeganfuller/.gem/ruby/2.2.0/bin ]; then
     PATH=$PATH:/home/markeganfuller/.gem/ruby/2.2.0/bin
 fi
-# ignoreboth
-# ignoredups (no duplicates)
-# ignorespace (ignore lines starting with space)
-HISTCONTROL=ignoreboth
 
-# Unlimited history
-export HISTFILESIZE=
-export HISTSIZE=
+# Setup History
+HISTCONTROL=ignoreboth  # ignoreboth (no duplicates/gnore lines starting with space)
+HISTFILESIZE=  # Unlimited history
+HISTSIZE=  # Unlimited history
+HISTTIMEFORMAT="%FT%T%z "
+shopt -s histappend  # append to the history file, don't overwrite it
 
-shopt -s histappend     # append to the history file, don't overwrite it
+
 
 # check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.
@@ -34,7 +33,17 @@ TERM=xterm-256color
 # Setup Prompt
 export PROMPT_COMMAND=__prompt_command
 
+log_bash_persistent_history() {
+  local hist=$(history 1 | cut -d ' ' -f2-)  # Get last command and cut hist number
+  local command_part=$(echo $hist | cut -d' ' -f2-)  # Get command from line
+  if [ "$command_part" != "$PERSISTENT_HISTORY_LAST" ]; then
+    echo $hist >> ~/.persistent_history
+    export PERSISTENT_HISTORY_LAST="$command_part"
+  fi
+}
+
 function __prompt_command() {
+    log_bash_persistent_history
     EXIT="$?"
     EXIT_COLOR=""
     C_RED='\[\e[0;31m\]'
