@@ -43,12 +43,18 @@ log_bash_persistent_history() {
 }
 
 function __prompt_command() {
-    log_bash_persistent_history
     EXIT="$?"
+    log_bash_persistent_history
     EXIT_COLOR=""
     C_RED='\[\e[0;31m\]'
     C_OIB='\[\e[0;100m\]'
     C_CLR='\[\e[0m\]'
+
+    if [[ $ASCIINEMA_REC ]]; then
+        REC="{${C_RED}REC${C_CLR}}"
+    else
+        REC=""
+    fi
 
     # Auto find and source venv
     CUR_DIR_NAME=$(basename "$(pwd)")
@@ -81,10 +87,10 @@ function __prompt_command() {
 
     if [[ $EUID -ne 0 ]]; then
         # Normal User Prompt
-        PS1="${VENV}${debian_chroot:+($debian_chroot)}\u${SSH}[${EXIT_COLOR}${EXIT}${C_CLR}]:\W${C_RED}\$${C_CLR} "
+        PS1="${REC}${VENV}${debian_chroot:+($debian_chroot)}\u${SSH}[${EXIT_COLOR}${EXIT}${C_CLR}]:\W${C_RED}\$${C_CLR} "
     else
         # Root User Prompt (red)
-        PS1="${VENV}${C_RED}${debian_chroot:+($debian_chroot)}\u${SSH}${C_CLR}[${EXIT_COLOR}${EXIT}${C_CLR}]${C_RED}:\W#${C_CLR} "
+        PS1="${REC}${VENV}${C_RED}${debian_chroot:+($debian_chroot)}\u${SSH}${C_CLR}[${EXIT_COLOR}${EXIT}${C_CLR}]${C_RED}:\W#${C_CLR} "
     fi
 }
 
