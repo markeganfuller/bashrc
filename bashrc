@@ -9,9 +9,9 @@ fi
 if [ -d /sbin ]; then
     PATH=$PATH:/sbin
 fi
-# Add /home/markeganfuller/.gem/ruby/2.2.0/bin to PATH
-if [ -d /home/markeganfuller/.gem/ruby/2.2.0/bin ]; then
-    PATH=$PATH:/home/markeganfuller/.gem/ruby/2.2.0/bin
+# Add Ruby gems to PATH
+if [ -d $(ruby -e 'print Gem.user_dir')/bin ]; then
+    PATH="$PATH:$(ruby -e 'print Gem.user_dir')/bin"
 fi
 
 # Setup History
@@ -115,6 +115,7 @@ alias units="units --verbose --one-line"
 
 # Vim without plugins
 alias vimm="vim -u NONE"
+alias view="vim"  # Use vim for view not vi
 
 # LC_COLLATE=C makes underscores sort before a
 alias ls="LC_COLLATE=C ls --color -lh"
