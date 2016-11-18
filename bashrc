@@ -241,3 +241,11 @@ function archwiki-search ()
     out=$(echo "${top}" | sed 's|^|file://|')
     echo -e "\n${out}\n"
 }
+
+function socks_proxy ()
+{
+    PROXY_HOST=$1
+    PORT="${2:-8432}"
+    echo "Starting SOCKs proxy, via ${PROXY_HOST} on port ${PORT}"
+    ssh -D ${PORT} -C -q -N ${PROXY_HOST}
+}
