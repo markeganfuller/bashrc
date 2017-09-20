@@ -59,15 +59,6 @@ function __prompt_command() {
     # Auto find and source venv
     CUR_DIR_NAME=$(basename "$(pwd)")
 
-    if [ -e $HOME/.virtualenvs/${CUR_DIR_NAME} ]; then
-        VENV_BASENAME=$(basename "${VIRTUAL_ENV}")
-        if [ "${VENV_BASENAME}" != "${CUR_DIR_NAME}" ]; then
-            workon $CUR_DIR_NAME
-        fi
-    elif [ ! -z $VIRTUAL_ENV ] ; then
-        deactivate > /dev/null 2>&1
-    fi
-
     # Display venv in prompt
     VENV="${VIRTUAL_ENV}"
     if [ ! -z $VENV ]; then
@@ -248,4 +239,23 @@ function socks_proxy ()
     PORT="${2:-8432}"
     echo "Starting SOCKs proxy, via ${PROXY_HOST} on port ${PORT}"
     ssh -D ${PORT} -C -q -N ${PROXY_HOST}
+}
+
+function wwork ()
+{
+    cur_dir=$(pwd)
+    venv=$(basename ${cur_dir})
+    workon ${venv}
+}
+
+# Display clipboard
+function dcb ()
+{
+    echo "|<<<<<<PRIMARY>>>>>>|"
+    xclip -selection primary -o;
+    echo -e "\n|<<<<<<SECONDARY>>>>>>|"
+    xclip -selection secondary -o;
+    echo -e "\n|<<<<<<CLIPBOARD>>>>>>|"
+    xclip -selection clipboard -o;
+    echo ""
 }
