@@ -135,7 +135,7 @@ function gitdiffpull {
 
 # Git howtos, echo some useful instructions
 alias gitundocommit="echo 'git reset --soft HEAD^'"
-alias gitundomerge="echo 'git reset --hard ORIG_HEAD^'"
+alias gitundomerge="echo 'git reset --hard ORIG_HEAD'"
 
 # Make ipython nicer
 alias ipython="ipython --no-confirm-exit --no-banner --pprint"
