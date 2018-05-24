@@ -2,7 +2,7 @@
 [ -z "$PS1" ] && return
 
 # Add home/bin to PATH
-if [ -d $HOME/bin ]; then
+if [ -d "$HOME/bin" ]; then
     PATH=$PATH:$HOME/bin
 fi
 # Add /sbin to PATH
@@ -10,7 +10,7 @@ if [ -d /sbin ]; then
     PATH=$PATH:/sbin
 fi
 # Add Ruby gems to PATH
-if [ -d $(ruby -e 'print Gem.user_dir')/bin ]; then
+if [ -d "$(ruby -e 'print Gem.user_dir')/bin" ]; then
     PATH="$PATH:$(ruby -e 'print Gem.user_dir')/bin"
 fi
 
@@ -34,10 +34,12 @@ TERM=xterm-256color
 export PROMPT_COMMAND=__prompt_command
 
 log_bash_persistent_history() {
-  local hist=$(history 1 | cut -d ' ' -f2-)  # Get last command and cut hist number
-  local command_part=$(echo $hist | cut -d' ' -f2-)  # Get command from line
+  local hist
+  local command_part
+  hist=$(history 1 | cut -d ' ' -f2-)  # Get last command and cut hist number
+  command_part=$(echo "$hist" | cut -d' ' -f2-)  # Get command from line
   if [ "$command_part" != "$PERSISTENT_HISTORY_LAST" ]; then
-    echo $hist >> ~/.persistent_history
+    echo "$hist" >> ~/.persistent_history
     export PERSISTENT_HISTORY_LAST="$command_part"
   fi
 }
@@ -56,12 +58,9 @@ function __prompt_command() {
         REC=""
     fi
 
-    # Auto find and source venv
-    CUR_DIR_NAME=$(basename "$(pwd)")
-
     # Display venv in prompt
     VENV="${VIRTUAL_ENV}"
-    if [ ! -z $VENV ]; then
+    if [ ! -z "$VENV" ]; then
         VENV="(${C_OIB}$(basename "${VENV})${C_CLR}")"
     fi
 
@@ -78,10 +77,10 @@ function __prompt_command() {
 
     if [[ $EUID -ne 0 ]]; then
         # Normal User Prompt
-        PS1="${REC}${VENV}${debian_chroot:+($debian_chroot)}\u${SSH}[${EXIT_COLOR}${EXIT}${C_CLR}]:\W${C_RED}\$${C_CLR} "
+        PS1="${REC}${VENV}\\u${SSH}[${EXIT_COLOR}${EXIT}${C_CLR}]:\\W${C_RED}\$${C_CLR} "
     else
         # Root User Prompt (red)
-        PS1="${REC}${VENV}${C_RED}${debian_chroot:+($debian_chroot)}\u${SSH}${C_CLR}[${EXIT_COLOR}${EXIT}${C_CLR}]${C_RED}:\W#${C_CLR} "
+        PS1="${REC}${VENV}${C_RED}\\u${SSH}${C_CLR}[${EXIT_COLOR}${EXIT}${C_CLR}]${C_RED}:\\W#${C_CLR} "
     fi
 }
 
@@ -89,15 +88,10 @@ function __prompt_command() {
 export EDITOR='vim'
 export VISUAL='vim'
 
-# enable programmable completion features
-if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
-    . /etc/bash_completion
-fi
-
 # Setup Virtual Env Wrapper
 export WORKON_HOME=${HOME}/.virtualenvs
+# shellcheck disable=SC1094
 source /usr/bin/virtualenvwrapper.sh
-
 
 # --- Aliases ---
 # Not in seperate file for ease of deployment
@@ -115,7 +109,6 @@ alias less="less -R"  # Fix colors in less
 
 alias grep="grep --color=auto"
 alias egrep="egrep --color=auto"
-alias grepr="grep -inr * -e $1"  # Grep Recursively for arg
 
 alias mysql="mysql --auto-rehash --auto-vertical-output"
 
@@ -127,10 +120,10 @@ alias gitgraph_one="git log --graph --full-history --oneline" # single branch
 
 # Diff after git pull
 function gitdiffpull {
-    branch=$(git branch | grep \* | cut --complement -f 1 -d ' ')
-    echo $branch
+    branch=$(git branch | grep '\*' | cut --complement -f 1 -d ' ')
+    echo "$branch"
     # @{1} gets the previous state of the branch.
-    git diff ${branch}@{1} ${branch}
+    git diff "${branch}@{1}" "${branch}"
 }
 
 # Git howtos, echo some useful instructions
@@ -169,7 +162,7 @@ function cd()
     fi
     # If in git repo print branch
     if [ -d "./.git" ]; then
-        GIT_STATUS=$(git branch --color | grep \* | cut --complement -f 1 -d ' ')
+        GIT_STATUS=$(git branch --color | grep '\*' | cut --complement -f 1 -d ' ')
         echo "Git Branch: ${GIT_STATUS}";
     fi
     ls; # List directory
@@ -178,16 +171,19 @@ function cd()
 # cd to top level of git repo
 function cdg()
 {
-    cd "$(git rev-parse --show-toplevel)"
+    cd "$(git rev-parse --show-toplevel)" || return
 }
 
 # Search PWD for dir and change to it
 function cdb ()
 {
+    # Magic perl, don't touch :(
+    # shellcheck disable=SC1117
+    # shellcheck disable=SC2027
     RGX="s/(.*"$1"[^\/]*).*$/\1/i"
     NEWPWD=$(pwd | perl -pe "$RGX")
-    echo $NEWPWD
-    cd "$NEWPWD"
+    echo "$NEWPWD"
+    cd "$NEWPWD" || return
 }
 
 # Disable crontab -r
@@ -200,19 +196,22 @@ function crontab ()
 # Vagrant recreate
 function vrecreate ()
 {
-    MACHINES=$@
+    MACHINES=$*
+    # We want worksplitting here
+    # shellcheck disable=SC2086
     vagrant destroy -f ${MACHINES} && vagrant up ${MACHINES}
 }
 
 function todos ()
 {
-    echo -e "\n--- XXXs"
+    echo -e "\\n--- XXXs"
     grep -nr 'XXX'
-    echo -e "\n--- To Dos"
+    echo -e "\\n--- To Dos"
     grep -nr 'TODO'
     echo ""
 }
 
+# Search local copy of arch wiki
 function archwiki-search ()
 {
     SEARCH=$1
@@ -223,29 +222,35 @@ function archwiki-search ()
     # Remove files with no hits
     # Split out the count for easy sorting
     # Sort by number of hits
-    ret=$(grep -irc ${SEARCH} ${WIKIDIR} \
+    ret=$(grep -irc "${SEARCH}" "${WIKIDIR}" \
           | grep -v ":0" \
           | sed 's/:\([0-9]\+\)$/ \1/' \
           | sort -t' ' -k 2 -n -r)
 
     top=$(echo "${ret}" | head -n 5)
+    # Multiple lines so can't use var replace
+    # shellcheck disable=SC2001
     out=$(echo "${top}" | sed 's|^|file://|')
-    echo -e "\n${out}\n"
+    echo -e "\\n${out}\\n"
 }
 
+# Create a socks proxy via host $1
 function socks_proxy ()
 {
     PROXY_HOST=$1
     PORT="${2:-8432}"
     echo "Starting SOCKs proxy, via ${PROXY_HOST} on port ${PORT}"
-    ssh -D ${PORT} -C -q -N ${PROXY_HOST}
+    # We want client side expansion
+    # shellcheck disable=SC2029
+    ssh -D "${PORT}" -C -q -N "${PROXY_HOST}"
 }
 
+# Load virtualenv with same name as current dir
 function wwork ()
 {
     cur_dir=$(pwd)
-    venv=$(basename ${cur_dir})
-    workon ${venv}
+    venv=$(basename "${cur_dir}")
+    workon "${venv}"
 }
 
 # Display clipboard
@@ -253,9 +258,9 @@ function dcb ()
 {
     echo "|<<<<<<PRIMARY>>>>>>|"
     xclip -selection primary -o;
-    echo -e "\n|<<<<<<SECONDARY>>>>>>|"
+    echo -e "\\n|<<<<<<SECONDARY>>>>>>|"
     xclip -selection secondary -o;
-    echo -e "\n|<<<<<<CLIPBOARD>>>>>>|"
+    echo -e "\\n|<<<<<<CLIPBOARD>>>>>>|"
     xclip -selection clipboard -o;
     echo ""
 }
