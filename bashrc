@@ -61,7 +61,7 @@ function __prompt_command() {
     # Display venv in prompt
     VENV="${VIRTUAL_ENV}"
     if [ ! -z "$VENV" ]; then
-        VENV="(${C_OIB}$(basename "${VENV})${C_CLR}")"
+        VENV="(${C_OIB}$(basename "${VENV}${C_CLR})")"
     fi
 
     # Color exit code if not 0
