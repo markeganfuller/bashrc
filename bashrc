@@ -1,6 +1,7 @@
 # If not running interactively, don't do anything
 [ -z "$PS1" ] && return
 
+# Path adjustments ------------------------------------------------------------
 # Add home/bin to PATH
 if [ -d "$HOME/bin" ]; then
     PATH=$PATH:$HOME/bin
@@ -14,14 +15,29 @@ if [ -d "$(ruby -e 'print Gem.user_dir')/bin" ]; then
     PATH="$PATH:$(ruby -e 'print Gem.user_dir')/bin"
 fi
 
-# Setup History
-HISTCONTROL=ignoreboth  # ignoreboth (no duplicates/gnore lines starting with space)
-HISTFILESIZE=  # Unlimited history
+# Useful constants ------------------------------------------------------------
+
+# Colors
+export C_CLR='\[\e[0m\]'
+export C_RED='\[\e[0;31m\]'
+export C_GREEN='\[\e[0;32m\]'
+export C_BLUE='\[\e[0;34m\]'
+export C_YELLOW='\[\e[0;33m\]'
+
+# Regexes
+alias ls_regexs="env | grep 'REGEX[^=]*' -o"
+# Note its a 'dumb' ip regex, accepts 999.999.999.999
+export REGEX_IP='\([0-9]\{1,3\}\.\)\{3\}[0-9]\{1,3\}'
+
+# Fix ls colors for missing / orphaned files
+export LS_COLORS="mi=00:or=40;31;01"
+
+# Setup Bash History ----------------------------------------------------------
+HISTCONTROL=ignoreboth  # no duplicates/ignore lines starting with space
+HISTFILESIZE=  # Unlimited history file
 HISTSIZE=  # Unlimited history
 HISTTIMEFORMAT="%FT%T%z "
 shopt -s histappend  # append to the history file, don't overwrite it
-
-
 
 # check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.
@@ -30,10 +46,12 @@ shopt -s checkwinsize
 # Set TERM
 TERM=xterm-256color
 
-# Setup Prompt
+# Setup Prompt ----------------------------------------------------------------
 export PROMPT_COMMAND=__prompt_command
 
 log_bash_persistent_history() {
+  # Function to log commands to a persistent history file, doesn't suffer from
+  # the issues standard bash histroy has. Called as part of the PROMPT_COMMAND
   local hist
   local command_part
   hist=$(history 1 | cut -d ' ' -f2-)  # Get last command and cut hist number
@@ -45,122 +63,107 @@ log_bash_persistent_history() {
 }
 
 function __prompt_command() {
-    EXIT="$?"
+    local EXIT="$?"
     log_bash_persistent_history
-    EXIT_COLOR=""
-    C_RED='\[\e[0;31m\]'
-    C_OIB='\[\e[0;100m\]'
-    C_CLR='\[\e[0m\]'
+    local EXIT_COLOR=""
 
+    # Display if were recording with asciinema
     if [[ $ASCIINEMA_REC ]]; then
-        REC="{${C_RED}REC${C_CLR}}"
+        local REC="{${C_RED}REC${C_CLR}}"
     else
-        REC=""
+        local REC=""
     fi
 
     # Display venv in prompt
-    VENV="${VIRTUAL_ENV}"
+    local VENV="${VIRTUAL_ENV}"
     if [ ! -z "$VENV" ]; then
-        VENV="(${C_OIB}$(basename "${VENV}${C_CLR})")"
+        VENV_NAME=$(basename "${VENV}")
+        VENV="(${C_YELLOW}${VENV_NAME}${C_CLR})"
     fi
 
     # Color exit code if not 0
     if [ $EXIT != 0 ]; then
-        EXIT_COLOR=$C_RED
+        local EXIT_COLOR=$C_RED
     fi
 
     # Show hostname if connected via SSH
-    SSH=''
+    local SSH=''
     if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ] || pstree $$ -s | grep ssh -q ; then
         SSH='@\h'
     fi
 
     if [[ $EUID -ne 0 ]]; then
-        # Normal User Prompt
-        PS1="${REC}${VENV}\\u${SSH}[${EXIT_COLOR}${EXIT}${C_CLR}]:\\W${C_RED}\$${C_CLR} "
+        local ROOT_COLOR=""
+        local ROOT_COLOR_END=""
     else
-        # Root User Prompt (red)
-        PS1="${REC}${VENV}${C_RED}\\u${SSH}${C_CLR}[${EXIT_COLOR}${EXIT}${C_CLR}]${C_RED}:\\W#${C_CLR} "
+        local ROOT_COLOR=$C_RED
+        local ROOT_COLOR_END=$C_CLR
     fi
+
+    PS1=""
+    PS1+="${REC}"
+    PS1+="${VENV}"
+    PS1+="${ROOT_COLOR}\\u${SSH}${ROOT_COLOR_END}"
+    PS1+="[${EXIT_COLOR}${EXIT}${C_CLR}]"
+    PS1+=":\\W"
+    PS1+="${C_RED}\$${C_CLR}"
+    PS1+=" "
 }
 
-# Set up editor
+# Set up editor ---------------------------------------------------------------
 export EDITOR='vim'
 export VISUAL='vim'
 
-# Setup Virtual Env Wrapper
+# Setup Virtual Env Wrapper ---------------------------------------------------
 export WORKON_HOME=${HOME}/.virtualenvs
 # shellcheck disable=SC1094
 source /usr/bin/virtualenvwrapper.sh
 
-# --- Aliases ---
+# Aliases ---------------------------------------------------------------------
 # Not in seperate file for ease of deployment
-alias tableflip="echo '(╯°□°）╯︵ ┻━┻'"
-alias units="units --verbose --one-line"
 
-# Vim without plugins
-alias vimm="vim -u NONE"
-alias view="vim"  # Use vim for view not vi
-
-# LC_COLLATE=C makes underscores sort before a
-alias ls="LC_COLLATE=C ls --color -lh"
-
-alias less="less -R"  # Fix colors in less
-
-alias grep="grep --color=auto"
-alias egrep="egrep --color=auto"
-
-alias mysql="mysql --auto-rehash --auto-vertical-output"
-
-alias packer=packer-io
-
-# Git Graphs
 alias gitgraph="git log --graph --full-history --all --oneline --decorate" # full graph
 alias gitgraph_one="git log --graph --full-history --oneline" # single branch
+alias gitundocommit="echo 'git reset --soft HEAD^'"  # Git how to
+alias gitundomerge="echo 'git reset --hard ORIG_HEAD'"  # Git how to
+alias grep="grep --color=auto"  # Color for grep
+alias egrep="egrep --color=auto"  # Color for egrep
+alias ipython="ipython --no-confirm-exit --no-banner --pprint"  # Make ipython nicer
+alias less="less -R"  # Fix colors in less
+# LC_COLLATE=C makes underscores sort before a
+alias ls="LC_COLLATE=C ls --color -lh"
+# Nicer mysql output
+alias mysql="mysql --auto-rehash --auto-vertical-output"
+# Nice'd Bash, spawns a bash process with highest priority
+alias nicebash='sudo nice -n -20 bash'
+alias packer=packer-io
+alias su='sudo bash'  # Rebind su, if su is needed /bin/su
+alias sudo='sudo '  # Fixes bash ignoring aliases after sudo
+alias tableflip="echo '(╯°□°）╯︵ ┻━┻'"
+alias units="units --verbose --one-line"
+alias vimm="vim -u NONE"  # Vim without plugins
+alias view="vim"  # Use vim for view not vi
 
-# Diff after git pull
+# Functions -------------------------------------------------------------------
+
 function gitdiffpull {
+    # Prints a diff of a git pull
     branch=$(git branch | grep '\*' | cut --complement -f 1 -d ' ')
     echo "$branch"
     # @{1} gets the previous state of the branch.
     git diff "${branch}@{1}" "${branch}"
 }
 
-# Git howtos, echo some useful instructions
-alias gitundocommit="echo 'git reset --soft HEAD^'"
-alias gitundomerge="echo 'git reset --hard ORIG_HEAD'"
-
-# Make ipython nicer
-alias ipython="ipython --no-confirm-exit --no-banner --pprint"
-
-# Nice'd Bash, spawns a bash process with highest priority
-alias nicebash='sudo nice -n -20 bash'
-
-# Rebind su, if su is needed /bin/su
-alias su='sudo bash'
-alias sudo='sudo ' # Fixes bash ignoring aliases after sudo
-
-# Clear SSH Sockets
-alias clear_sockets='rm -r ~/.ssh/sockets/*'
-
-# Local HTTPBIN server https://github.com/Runscope/httpbin
-# pip install httpbin
-alias run_httpbin='python -m httpbin.core'
-
-# ccat and cless require pip install pygments
-alias ccat="pygmentize -g"  # Syntax Highlighted cat
-function cless() { pygmentize -g "$1" | less -R; }  # Syntax Highlighted less
-
-# Function to change dir then list, replaces cd
 function cd()
 {
-    # If no args cd to home
+    # Change dir then list new directory contents, replaces cd
+    # If no args cd to home as cd normally does
     if [ -n "$1" ]; then
         builtin cd "$1";
     else
         builtin cd ~;
     fi
-    # If in git repo print branch
+    # If in git repo top level directory print branch
     if [ -d "./.git" ]; then
         GIT_STATUS=$(git branch --color | grep '\*' | cut --complement -f 1 -d ' ')
         echo "Git Branch: ${GIT_STATUS}";
@@ -168,15 +171,15 @@ function cd()
     ls; # List directory
 }
 
-# cd to top level of git repo
 function cdg()
 {
+    # cd to top level of git repo
     cd "$(git rev-parse --show-toplevel)" || return
 }
 
-# Search PWD for dir and change to it
 function cdb ()
 {
+    # Search CWD for $1 and change to that directory
     # Magic perl, don't touch :(
     # shellcheck disable=SC1117
     # shellcheck disable=SC2027
@@ -186,24 +189,25 @@ function cdb ()
     cd "$NEWPWD" || return
 }
 
-# Disable crontab -r
 function crontab ()
 {
+    # Disable crontab -r
     # Replace -r with -e
     /usr/bin/crontab "${@/-r/-e}"
 }
 
-# Vagrant recreate
 function vrecreate ()
 {
+    # Vagrant recreate, destroy and up $*
     MACHINES=$*
-    # We want worksplitting here
+    # We want wordsplitting here
     # shellcheck disable=SC2086
     vagrant destroy -f ${MACHINES} && vagrant up ${MACHINES}
 }
 
 function todos ()
 {
+    # Search for TODO / XXX and print
     echo -e "\\n--- XXXs"
     grep -nr 'XXX'
     echo -e "\\n--- To Dos"
@@ -211,9 +215,9 @@ function todos ()
     echo ""
 }
 
-# Search local copy of arch wiki
 function archwiki-search ()
 {
+    # Search local copy of arch wiki, requires arch-wiki-docs package
     SEARCH=$1
     WIKI_LANG='en'
     WIKI_BASEDIR='/usr/share/doc/arch-wiki/html'
@@ -227,6 +231,7 @@ function archwiki-search ()
           | sed 's/:\([0-9]\+\)$/ \1/' \
           | sort -t' ' -k 2 -n -r)
 
+    # Take the top 5
     top=$(echo "${ret}" | head -n 5)
     # Multiple lines so can't use var replace
     # shellcheck disable=SC2001
@@ -234,9 +239,9 @@ function archwiki-search ()
     echo -e "\\n${out}\\n"
 }
 
-# Create a socks proxy via host $1
 function socks_proxy ()
 {
+    # Create a socks proxy via host $1
     PROXY_HOST=$1
     PORT="${2:-8432}"
     echo "Starting SOCKs proxy, via ${PROXY_HOST} on port ${PORT}"
@@ -245,17 +250,17 @@ function socks_proxy ()
     ssh -D "${PORT}" -C -q -N "${PROXY_HOST}"
 }
 
-# Load virtualenv with same name as current dir
 function wwork ()
 {
+    # Load virtualenv with same name as current dir
     cur_dir=$(pwd)
     venv=$(basename "${cur_dir}")
     workon "${venv}"
 }
 
-# Display clipboard
 function dcb ()
 {
+    # Display clipboard
     echo "|<<<<<<PRIMARY>>>>>>|"
     xclip -selection primary -o;
     echo -e "\\n|<<<<<<SECONDARY>>>>>>|"
