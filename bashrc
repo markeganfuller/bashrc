@@ -143,7 +143,7 @@ alias tableflip="echo '(╯°□°）╯︵ ┻━┻'"
 alias units="units --verbose --one-line"
 alias vimm="vim -u NONE"  # Vim without plugins
 alias view="vim"  # Use vim for view not vi
-
+alias botchcli="rlwrap botchcli"  # Wrap botchcli with rlwrap
 # Functions -------------------------------------------------------------------
 
 function gitdiffpull {
