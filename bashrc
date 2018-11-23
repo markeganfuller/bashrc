@@ -269,3 +269,10 @@ function dcb ()
     xclip -selection clipboard -o;
     echo ""
 }
+
+function tinydns_ipv6 ()
+{
+    # Convert IPv6 address into tinydns v6 format
+    ipv6calc -q --printfulluncompressed "$@" \
+        | tr -d :
+}
