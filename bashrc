@@ -119,6 +119,10 @@ export WORKON_HOME=${HOME}/.virtualenvs
 # shellcheck disable=SC1094
 source /usr/bin/virtualenvwrapper.sh
 
+# Misc Setup ------------------------------------------------------------------
+# make journalctl show full log lines, no truncation
+export SYSTEMD_LESS=FRXMK
+
 # Aliases ---------------------------------------------------------------------
 # Not in seperate file for ease of deployment
 
