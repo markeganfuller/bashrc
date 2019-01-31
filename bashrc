@@ -37,6 +37,8 @@ HISTCONTROL=ignoreboth  # no duplicates/ignore lines starting with space
 HISTFILESIZE=  # Unlimited history file
 HISTSIZE=  # Unlimited history
 HISTTIMEFORMAT="%FT%T%z "
+# Don't save dangerous commands, have you ever CTRL-Red a reboot?
+HISTIGNORE='reboot:poweroff'
 shopt -s histappend  # append to the history file, don't overwrite it
 
 # check the window size after each command and, if necessary,
