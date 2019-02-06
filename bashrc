@@ -150,6 +150,8 @@ alias units="units --verbose --one-line"
 alias vimm="vim -u NONE"  # Vim without plugins
 alias view="vim"  # Use vim for view not vi
 alias botchcli="rlwrap botchcli"  # Wrap botchcli with rlwrap
+alias reboot="echo 'If you actually meant to kill me, use /sbin/reboot'"
+alias poweroff="echo 'If you actually meant to kill me, use /sbin/poweroff'"
 # Functions -------------------------------------------------------------------
 
 function gitdiffpull {
