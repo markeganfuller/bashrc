@@ -78,7 +78,7 @@ function __prompt_command() {
 
     # Display venv in prompt
     local VENV="${VIRTUAL_ENV}"
-    if [ ! -z "$VENV" ]; then
+    if [ -n "$VENV" ]; then
         VENV_NAME=$(basename "${VENV}")
         VENV="(${C_YELLOW}${VENV_NAME}${C_CLR})"
     fi
@@ -167,9 +167,9 @@ function cd()
     # Change dir then list new directory contents, replaces cd
     # If no args cd to home as cd normally does
     if [ -n "$1" ]; then
-        builtin cd "$1";
+        builtin cd "$1" || return ;
     else
-        builtin cd ~;
+        builtin cd ~ || return;
     fi
     # If in git repo top level directory print branch
     if [ -d "./.git" ]; then
