@@ -152,6 +152,7 @@ alias view="vim"  # Use vim for view not vi
 alias botchcli="rlwrap botchcli"  # Wrap botchcli with rlwrap
 alias reboot="echo 'If you actually meant to kill me, use /sbin/reboot'"
 alias poweroff="echo 'If you actually meant to kill me, use /sbin/poweroff'"
+alias speedtest="speedtest --exclude 4068"  # Exclude bytemark's server
 # Functions -------------------------------------------------------------------
 
 function gitdiffpull {
