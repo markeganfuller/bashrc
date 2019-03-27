@@ -142,7 +142,6 @@ alias ls="LC_COLLATE=C ls --color -lh"
 alias mysql="mysql --auto-rehash --auto-vertical-output"
 # Nice'd Bash, spawns a bash process with highest priority
 alias nicebash='sudo nice -n -20 bash'
-alias packer=packer-io
 alias su='sudo bash'  # Rebind su, if su is needed /bin/su
 alias sudo='sudo '  # Fixes bash ignoring aliases after sudo
 alias tableflip="echo '(╯°□°）╯︵ ┻━┻'"
