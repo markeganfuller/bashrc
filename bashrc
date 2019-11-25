@@ -286,3 +286,17 @@ function tinydns_ipv6 ()
     ipv6calc -q --printfulluncompressed "$@" \
         | tr -d :
 }
+
+function ttt ()
+{
+    # Immediately add and start a new task in taskwarrior, designed for
+    # immediate context switches
+
+    # Create the new task
+    taskid=$(task add "${@}")
+    taskid=${taskid//[^0-9]/}  # Strip out task number
+    # Stop any active tasks
+    task +ACTIVE stop
+    # Start new task
+    task "${taskid}" start
+}
