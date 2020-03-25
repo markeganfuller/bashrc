@@ -132,28 +132,35 @@ alias gitgraph="git log --graph --full-history --all --oneline --decorate" # ful
 alias gitgraph_one="git log --graph --full-history --oneline" # single branch
 alias gitundocommit="echo 'git reset --soft HEAD^'"  # Git how to
 alias gitundomerge="echo 'git reset --hard ORIG_HEAD'"  # Git how to
-alias grep="grep --color=auto"  # Color for grep
-alias egrep="egrep --color=auto"  # Color for egrep
-alias ipython="ipython --no-confirm-exit --no-banner --pprint"  # Make ipython nicer
-alias less="less -R"  # Fix colors in less
-# LC_COLLATE=C makes underscores sort before a
-alias ls="LC_COLLATE=C ls --color -lh"
-# Nicer mysql output
-alias mysql="mysql --auto-rehash --auto-vertical-output"
-# Nice'd Bash, spawns a bash process with highest priority
-alias nicebash='sudo nice -n -20 bash'
+
+alias nicebash='sudo nice -n -20 bash'  # Nice'd Bash, spawns a bash process with highest priority
 alias su='sudo bash'  # Rebind su, if su is needed /bin/su
 alias sudo='sudo '  # Fixes bash ignoring aliases after sudo
+
 alias tableflip="echo '(╯°□°）╯︵ ┻━┻'"
 alias units="units --verbose --one-line --digits 15 "
 alias vimm="vim -u NONE"  # Vim without plugins
-alias view="vim"  # Use vim for view not vi
 alias botchcli="rlwrap botchcli"  # Wrap botchcli with rlwrap
+
 alias reboot="echo 'If you actually meant to kill me, use /sbin/reboot'"
 alias poweroff="echo 'If you actually meant to kill me, use /sbin/poweroff'"
-alias speedtest="speedtest --exclude 4068"  # Exclude bytemark's server
+
 alias sshnhk="ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"  # SSH with no hostkey checking
 alias sshp="ssh -o PreferredAuthentications=keyboard-interactive,password -o PubkeyAuthentication=no"  # SSH with no keys
+
+# Aliases - App options -------------------------------------------------------
+
+alias egrep="egrep --color=auto"  # Color for egrep
+alias grep="grep --color=auto"  # Color for grep
+alias ipython="ipython --no-confirm-exit --no-banner --pprint"  # Make ipython nicer
+alias less="less -R"  # Fix colors in less
+alias ls="LC_COLLATE=C ls --color -lh"  # LC_COLLATE=C makes underscores sort before a
+alias mysql="mysql --auto-rehash --auto-vertical-output"  # Nicer mysql output
+alias rename="perl-rename"  # Use perl-rename, allows regex
+alias speedtest="speedtest --exclude 4068"  # Exclude bytemark's server
+alias view="vim"  # Use vim for view not vi
+
+
 # Functions -------------------------------------------------------------------
 
 function gitdiffpull {
