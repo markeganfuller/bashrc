@@ -256,6 +256,37 @@ function archwiki-search ()
     echo -e "\\n${out}\\n"
 }
 
+function stc-search ()
+{
+    # Search SRC
+    SEARCH=$1
+    STC_BASE_DIR="${HOME}/repos/mine/stc"
+    STC_DOCS_DIR="${STC_BASE_DIR}/docs"
+    STC_SITE_DIR="${STC_BASE_DIR}/site"
+
+    # Remove files with no hits
+    # Split out the count for easy sorting
+    # Sort by number of hits
+    ret=$(grep -irc "${SEARCH}" "${STC_DOCS_DIR}" \
+          | grep -v ":0" \
+          | sed 's/:\([0-9]\+\)$/ \1/' \
+          | sort -t' ' -k 2 -n -r)
+
+    # Take the top 5
+    top=$(echo "${ret}" | head -n 5)
+    # Multiple lines so can't use var replace
+    # add file://
+    # Swap for html version for display (need to search md version to avoid getting menus
+    # swap md for html
+    # shellcheck disable=SC2001
+    out=$(echo "${top}" \
+        | sed 's|^|file://|' \
+        | sed "s|${STC_DOCS_DIR}|${STC_SITE_DIR}|" \
+        | sed "s|.md|.html|"
+    )
+    echo -e "\\n${out}\\n"
+}
+
 function socks_proxy ()
 {
     # Create a socks proxy via host $1
