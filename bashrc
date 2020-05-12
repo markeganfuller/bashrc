@@ -124,6 +124,8 @@ source /usr/bin/virtualenvwrapper.sh
 # Misc Setup ------------------------------------------------------------------
 # make journalctl show full log lines, no truncation
 export SYSTEMD_LESS=FRXMK
+# Use libvirt for vagrant
+export VAGRANT_DEFAULT_PROVIDER=libvirt
 
 # Aliases ---------------------------------------------------------------------
 # Not in seperate file for ease of deployment
@@ -147,6 +149,7 @@ alias poweroff="echo 'If you actually meant to kill me, use /sbin/poweroff'"
 
 alias sshnhk="ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"  # SSH with no hostkey checking
 alias sshp="ssh -o PreferredAuthentications=keyboard-interactive,password -o PubkeyAuthentication=no"  # SSH with no keys
+alias sshcis="ssh -o Kexalgorithms=+diffie-hellman-group14-sha1 -o Hostkeyalgorithms=+ssh-dss -o Ciphers=+aes256-cbc -o Pubkeyauthentication=no"  # SSH to ciscos
 
 # Aliases - App options -------------------------------------------------------
 
@@ -158,6 +161,7 @@ alias ls="LC_COLLATE=C ls --color -lh"  # LC_COLLATE=C makes underscores sort be
 alias mysql="mysql --auto-rehash --auto-vertical-output"  # Nicer mysql output
 alias rename="perl-rename"  # Use perl-rename, allows regex
 alias speedtest="speedtest --exclude 4068"  # Exclude bytemark's server
+alias speedtest-cli="speedtest --exclude 4068"  # Exclude bytemark's server
 alias view="vim"  # Use vim for view not vi
 
 
