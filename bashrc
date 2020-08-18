@@ -151,6 +151,8 @@ alias sshnhk="ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"  
 alias sshp="ssh -o PreferredAuthentications=keyboard-interactive,password -o PubkeyAuthentication=no"  # SSH with no keys
 alias sshcis="ssh -o Kexalgorithms=+diffie-hellman-group14-sha1,diffie-hellman-group1-sha1 -o Hostkeyalgorithms=+ssh-dss -o Ciphers=+aes256-cbc -o Pubkeyauthentication=no"  # SSH to ciscos
 
+alias serial_conn='screen /dev/ttyUSB0 9600,cs8'
+
 # Aliases - App options -------------------------------------------------------
 
 alias egrep="egrep --color=auto"  # Color for egrep
@@ -163,7 +165,6 @@ alias rename="perl-rename"  # Use perl-rename, allows regex
 alias speedtest="speedtest --exclude 4068"  # Exclude bytemark's server
 alias speedtest-cli="speedtest --exclude 4068"  # Exclude bytemark's server
 alias view="vim"  # Use vim for view not vi
-
 
 # Functions -------------------------------------------------------------------
 
