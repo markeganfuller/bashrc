@@ -272,7 +272,7 @@ function stc-search ()
     # Remove files with no hits
     # Split out the count for easy sorting
     # Sort by number of hits
-    ret=$(grep -irc "${SEARCH}" "${STC_DOCS_DIR}" \
+    ret=$(grep -Iirc "${SEARCH}" "${STC_DOCS_DIR}" \
           | grep -v ":0" \
           | sed 's/:\([0-9]\+\)$/ \1/' \
           | sort -t' ' -k 2 -n -r)
