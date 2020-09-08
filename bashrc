@@ -53,10 +53,10 @@ export PROMPT_COMMAND=__prompt_command
 
 function log_bash_persistent_history() {
   # Function to log commands to a persistent history file, doesn't suffer from
-  # the issues standard bash histroy has. Called as part of the PROMPT_COMMAND
+  # the issues standard bash history has. Called as part of the PROMPT_COMMAND
   local hist
   local command_part
-  hist=$(history 1 | cut -d ' ' -f2-)  # Get last command and cut hist number
+  hist=$(history 1 | sed 's/^ [^ ]*  //')  # Get last command and cut hist number
   command_part=$(echo "$hist" | cut -d' ' -f2-)  # Get command from line
   if [ "$command_part" != "$PERSISTENT_HISTORY_LAST" ]; then
     echo "$hist" >> ~/.persistent_history
@@ -259,6 +259,13 @@ function archwiki-search()
     # shellcheck disable=SC2001
     out=$(echo "${top}" | sed 's|^|file://|')
     echo -e "\\n${out}\\n"
+}
+
+function persistent-history()
+{
+    # Search persistent history for a command
+    SEARCH=$1
+    grep -i "${SEARCH}" ~/.persistent_history
 }
 
 function stc-search()
