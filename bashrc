@@ -51,7 +51,7 @@ TERM=xterm-256color
 # Setup Prompt ----------------------------------------------------------------
 export PROMPT_COMMAND=__prompt_command
 
-log_bash_persistent_history() {
+function log_bash_persistent_history() {
   # Function to log commands to a persistent history file, doesn't suffer from
   # the issues standard bash histroy has. Called as part of the PROMPT_COMMAND
   local hist
@@ -168,7 +168,7 @@ alias view="vim"  # Use vim for view not vi
 
 # Functions -------------------------------------------------------------------
 
-function gitdiffpull {
+function gitdiffpull() {
     # Prints a diff of a git pull
     branch=$(git branch | grep '\*' | cut --complement -f 1 -d ' ')
     echo "$branch"
@@ -199,7 +199,7 @@ function cdg()
     cd "$(git rev-parse --show-toplevel)" || return
 }
 
-function cdb ()
+function cdb()
 {
     # Search CWD for $1 and change to that directory
     # Magic perl, don't touch :(
@@ -211,14 +211,14 @@ function cdb ()
     cd "$NEWPWD" || return
 }
 
-function crontab ()
+function crontab()
 {
     # Disable crontab -r
     # Replace -r with -e
     /usr/bin/crontab "${@/-r/-e}"
 }
 
-function vrecreate ()
+function vrecreate()
 {
     # Vagrant recreate, destroy and up $*
     MACHINES=$*
@@ -227,7 +227,7 @@ function vrecreate ()
     vagrant destroy -f ${MACHINES} && vagrant up ${MACHINES}
 }
 
-function todos ()
+function todos()
 {
     # Search for TODO / XXX and print
     echo -e "\\n--- XXXs"
@@ -237,7 +237,7 @@ function todos ()
     echo ""
 }
 
-function archwiki-search ()
+function archwiki-search()
 {
     # Search local copy of arch wiki, requires arch-wiki-docs package
     SEARCH=$1
@@ -261,9 +261,9 @@ function archwiki-search ()
     echo -e "\\n${out}\\n"
 }
 
-function stc-search ()
+function stc-search()
 {
-    # Search SRC
+    # Search STC
     SEARCH=$1
     STC_BASE_DIR="${HOME}/repos/mine/stc"
     STC_DOCS_DIR="${STC_BASE_DIR}/docs"
@@ -292,7 +292,7 @@ function stc-search ()
     echo -e "\\n${out}\\n"
 }
 
-function socks_proxy ()
+function socks_proxy()
 {
     # Create a socks proxy via host $1
     PROXY_HOST=$1
@@ -303,7 +303,7 @@ function socks_proxy ()
     ssh -D "${PORT}" -C -q -N "${PROXY_HOST}"
 }
 
-function wwork ()
+function wwork()
 {
     # Load virtualenv with same name as current dir
     cur_dir=$(pwd)
@@ -311,7 +311,7 @@ function wwork ()
     workon "${venv}"
 }
 
-function dcb ()
+function dcb()
 {
     # Display clipboard
     echo "|<<<<<<PRIMARY>>>>>>|"
@@ -323,14 +323,14 @@ function dcb ()
     echo ""
 }
 
-function tinydns_ipv6 ()
+function tinydns_ipv6()
 {
     # Convert IPv6 address into tinydns v6 format
     ipv6calc -q --printfulluncompressed "$@" \
         | tr -d :
 }
 
-function ttt ()
+function ttt()
 {
     # Immediately add and start a new task in taskwarrior, designed for
     # immediate context switches
