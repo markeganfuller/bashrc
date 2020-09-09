@@ -28,6 +28,7 @@ export C_YELLOW='\[\e[0;33m\]'
 alias ls_regexs="env | grep 'REGEX[^=]*' -o"
 # Note its a 'dumb' ip regex, accepts 999.999.999.999
 export REGEX_IP='\([0-9]\{1,3\}\.\)\{3\}[0-9]\{1,3\}'
+export REGEX_ISO_DATETIME='[0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}T[0-9]\{2\}:[0-9]\{2\}:[0-9]\{2\}+[0-9]\{4\}'
 
 # Fix ls colors for missing / orphaned files
 export LS_COLORS="mi=00:or=40;31;01"
