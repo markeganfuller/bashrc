@@ -241,7 +241,7 @@ function todos()
 function archwiki-search()
 {
     # Search local copy of arch wiki, requires arch-wiki-docs package
-    SEARCH=$1
+    SEARCH=$*
     WIKI_LANG='en'
     WIKI_BASEDIR='/usr/share/doc/arch-wiki/html'
     WIKIDIR="${WIKI_BASEDIR}/${WIKI_LANG}/"
@@ -265,14 +265,14 @@ function archwiki-search()
 function persistent-history()
 {
     # Search persistent history for a command
-    SEARCH=$1
+    SEARCH=$*
     grep -i "${SEARCH}" ~/.persistent_history
 }
 
 function stc-search()
 {
     # Search STC
-    SEARCH=$1
+    SEARCH=$*
     STC_BASE_DIR="${HOME}/repos/mine/stc"
     STC_DOCS_DIR="${STC_BASE_DIR}/docs"
     STC_SITE_DIR="${STC_BASE_DIR}/site"
