@@ -156,8 +156,10 @@ alias serial_conn='screen /dev/ttyUSB0 9600,cs8'
 
 # Aliases - App options -------------------------------------------------------
 
-alias egrep="egrep --color=auto"  # Color for egrep
-alias grep="grep --color=auto"  # Color for grep
+# Grep: Ignore .git dirs and enable color
+alias egrep="egrep --exclude-dir=.git --color=auto"
+alias grep="grep --exclude-dir=.git --color=auto"
+
 alias ipython="ipython --no-confirm-exit --no-banner --pprint"  # Make ipython nicer
 alias less="less -R"  # Fix colors in less
 alias ls="LC_COLLATE=C ls --color -lh"  # LC_COLLATE=C makes underscores sort before a
