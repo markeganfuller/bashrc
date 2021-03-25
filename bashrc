@@ -353,3 +353,19 @@ function ttt()
     # Start new task
     task "${taskid}" start
 }
+
+# scp_vagrant <machine> <normal SCP args>
+# e.g.
+# scp_vagrant centos7 centos7:/srv/bob .
+# scp_vagrant centos7 . centos7:/srv/bob
+function scp_vagrant()
+{
+    MACHINE=$1
+    shift
+    CONFIG="/tmp/.vagrant_scp_conf"
+
+    vagrant ssh-config "${MACHINE}" > "${CONFIG}"
+    scp -F "${CONFIG}" "${@}"
+
+    rm "${CONFIG}"
+}
