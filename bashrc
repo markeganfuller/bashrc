@@ -297,7 +297,7 @@ function stc-search()
     out=$(echo "${top}" \
         | sed 's|^|file://|' \
         | sed "s|${STC_DOCS_DIR}|${STC_SITE_DIR}|" \
-        | sed "s|.md|.html|"
+        | sed "s|.md\s|.html |"
     )
     echo -e "\\n${out}\\n"
 }
