@@ -127,6 +127,9 @@ source /usr/bin/virtualenvwrapper.sh
 export SYSTEMD_LESS=FRXMK
 # Use libvirt for vagrant
 export VAGRANT_DEFAULT_PROVIDER=libvirt
+# FZF include hidden files
+export FZF_DEFAULT_COMMAND="fd --type f --hidden"
+export FZF_DEFAULT_OPTS='--reverse --preview "head {} | pygmentize -O style=monokai" --preview-window down'
 
 # Aliases ---------------------------------------------------------------------
 # Not in seperate file for ease of deployment
@@ -380,10 +383,12 @@ function cdf()
 # fzf vim
 function vf()
 {
-    target="$(fzf --reverse)"
-    absolute=$(realpath "${target}")
-    cd "$(dirname "${target}")" || exit 1
-    # If we're in a git repo its nicer to be at the top level
-    cdg
-    vim "${absolute}"
+    target="$(fzf)"
+    if [[ -n $target ]]; then
+        absolute=$(realpath "${target}")
+        cd "$(dirname "${target}")" || exit 1
+        # If we're in a git repo its nicer to be at the top level
+        cdg
+        vim "${absolute}"
+    fi
 }
