@@ -369,3 +369,21 @@ function scp_vagrant()
 
     rm "${CONFIG}"
 }
+
+# fzf CD
+function cdf()
+{
+    cd "${HOME}" || exit 1
+    cd "$(dirname "$(fzf)")" || return
+}
+
+# fzf vim
+function vf()
+{
+    target="$(fzf --reverse)"
+    absolute=$(realpath "${target}")
+    cd "$(dirname "${target}")" || exit 1
+    # If we're in a git repo its nicer to be at the top level
+    cdg
+    vim "${absolute}"
+}
