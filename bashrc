@@ -150,8 +150,8 @@ alias poweroff="echo 'If you actually meant to kill me, use /sbin/poweroff'"
 
 alias sshnhk="ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"  # SSH with no hostkey checking
 alias sshp="ssh -o PreferredAuthentications=keyboard-interactive,password -o PubkeyAuthentication=no"  # SSH with no keys
-alias sshcis="ssh -o Kexalgorithms=+diffie-hellman-group14-sha1,diffie-hellman-group1-sha1 -o Hostkeyalgorithms=+ssh-dss -o Ciphers=+aes256-cbc -o Pubkeyauthentication=no -a"  # SSH to ciscos
-
+# SSH to ciscos
+alias sshcis="ssh -o Kexalgorithms=+diffie-hellman-group14-sha1,diffie-hellman-group1-sha1 -o Hostkeyalgorithms=+ssh-dss,ssh-rsa -o PubkeyAcceptedAlgorithms=+ssh-rsa -o Ciphers=+aes256-cbc -o Pubkeyauthentication=no -a"
 alias serial_conn='screen /dev/ttyUSB0 9600,cs8'
 
 # Aliases - App options -------------------------------------------------------
