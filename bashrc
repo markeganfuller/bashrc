@@ -129,7 +129,7 @@ export SYSTEMD_LESS=FRXMK
 export VAGRANT_DEFAULT_PROVIDER=libvirt
 # FZF include hidden files
 export FZF_DEFAULT_COMMAND="fd --type f --hidden"
-export FZF_DEFAULT_OPTS='--reverse --preview "head {} | pygmentize -O style=monokai" --preview-window down'
+export FZF_DEFAULT_OPTS='--reverse --preview "head -n 30 {} | pygmentize -O style=monokai" --preview-window down'
 
 # Aliases ---------------------------------------------------------------------
 # Not in seperate file for ease of deployment
@@ -376,8 +376,11 @@ function scp_vagrant()
 # fzf CD
 function cdf()
 {
-    cd "${HOME}" || exit 1
-    cd "$(dirname "$(fzf)")" || return
+    builtin cd "${HOME}" || exit 1
+    target="$(FZF_DEFAULT_OPTS='--reverse --preview "ls {}" --preview-window down' FZF_DEFAULT_COMMAND='fd --type d --hidden' fzf)"
+    if [[ -n $target ]]; then
+        cd "$target" || return
+    fi
 }
 
 # fzf vim
@@ -390,5 +393,32 @@ function vf()
         # If we're in a git repo its nicer to be at the top level
         cdg
         vim "${absolute}"
+    fi
+}
+
+# Get SSH hosts from SSH config, known hosts etc
+function get_ssh_hosts() {
+    # Taken from fzf bash completion and adjusted
+    # https://github.com/junegunn/fzf/blob/master/shell/completion.bash#L284
+    {
+    tail -n +1 ~/.ssh/config ~/.ssh/config.d/* /etc/ssh/ssh_config 2> /dev/null \
+        | grep -i '^\s*host\(name\)\? ' \
+        | awk '{for (i = 2; i <= NF; i++) print $1 " " $i}' \
+        | grep -v '[*?]' ;\
+    grep -oE '^[[a-z0-9.,:-]+' ~/.ssh/known_hosts \
+        | tr ',' '\n' \
+        | tr -d '[' \
+        | awk '{ print $1 " " $1 }' ;\
+    grep -v '^\s*\(#\|$\)' /etc/hosts \
+        | grep -Fv '0.0.0.0' ;\
+    } | awk '{if (length($2) > 0) {print $2}}' | sort -u
+}
+
+# fzf ssh()
+function sshfzf()
+{
+    target=$(get_ssh_hosts | FZF_DEFAULT_OPTS='--reverse' fzf)
+    if [[ -n $target ]]; then
+        ssh "$target"
     fi
 }
