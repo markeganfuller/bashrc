@@ -68,7 +68,6 @@ function log_bash_persistent_history() {
 function __prompt_command() {
     local EXIT="$?"
     log_bash_persistent_history
-    local EXIT_COLOR=""
 
     # Display if were recording with asciinema
     if [[ $ASCIINEMA_REC ]]; then
@@ -84,9 +83,11 @@ function __prompt_command() {
         VENV="(${C_YELLOW}${VENV_NAME}${C_CLR})"
     fi
 
-    # Color exit code if not 0
+    # Show exit code if not 0
     if [ $EXIT != 0 ]; then
-        local EXIT_COLOR=$C_RED
+        local EXIT_STR="[${C_RED}${EXIT}${C_CLR}]"
+    else
+        local EXIT_STR=""
     fi
 
     # Show hostname if connected via SSH
@@ -104,10 +105,10 @@ function __prompt_command() {
     fi
 
     PS1=""
+    PS1+="${EXIT_STR}"
     PS1+="${REC}"
     PS1+="${VENV}"
     PS1+="${ROOT_COLOR}\\u${SSH}${ROOT_COLOR_END}"
-    PS1+="[${EXIT_COLOR}${EXIT}${C_CLR}]"
     PS1+=":\\W"
     PS1+="${C_RED}\$${C_CLR}"
     PS1+=" "
