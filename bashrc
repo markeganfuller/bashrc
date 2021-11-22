@@ -42,6 +42,8 @@ HISTTIMEFORMAT="%FT%T%z "
 HISTIGNORE='reboot:poweroff'
 shopt -s histappend  # append to the history file, don't overwrite it
 
+# Other config ----------------------------------------------------------------
+PERSISTENT_HIST_FILE="${HOME}/.persistent_history.sqlite"
 # check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.
 shopt -s checkwinsize
@@ -53,21 +55,36 @@ TERM=xterm-256color
 export PROMPT_COMMAND=__prompt_command
 
 function log_bash_persistent_history() {
-  # Function to log commands to a persistent history file, doesn't suffer from
-  # the issues standard bash history has. Called as part of the PROMPT_COMMAND
-  local hist
-  local command_part
-  hist=$(history 1 | sed 's/^ [^ ]*  //')  # Get last command and cut hist number
-  command_part=$(echo "$hist" | cut -d' ' -f2-)  # Get command from line
-  if [ "$command_part" != "$PERSISTENT_HISTORY_LAST" ]; then
-    echo "$hist" >> ~/.persistent_history
-    export PERSISTENT_HISTORY_LAST="$command_part"
-  fi
+    # Sqlite logging of commands
+    # Table creation
+    # CREATE TABLE history (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, number INTEGER, datetime TEXT, command TEXT, return_code INTEGER)
+
+    # TODO pwd
+    # TODO session info (tty etc)
+    local hist
+    local number
+    local datetime
+    local command
+    local return_code=$1
+
+    hist=$(history 1)
+    # 1 is space
+    number=$(echo "${hist}" | cut -d' ' -f2)
+    # 3 is space
+    datetime=$(echo "${hist}" | cut -d' ' -f4)
+    command=$(echo "${hist}" | cut -d' ' -f5-)
+
+    # Double single quoting stuff fixes escaping issues, not sure why? TODO
+    command=${command//\'/''/}
+
+    sqlite3 "${PERSISTENT_HIST_FILE}" \
+        "INSERT INTO history (number, datetime, command, return_code) VALUES (${number}, '${datetime}', '${command}', ${return_code});"
 }
+
 
 function __prompt_command() {
     local EXIT="$?"
-    log_bash_persistent_history
+    log_bash_persistent_history $EXIT
 
     # Display if were recording with asciinema
     if [[ $ASCIINEMA_REC ]]; then
@@ -272,7 +289,9 @@ function persistent-history()
 {
     # Search persistent history for a command
     SEARCH=$*
-    grep -i "${SEARCH}" ~/.persistent_history
+    sqlite3 "${PERSISTENT_HIST_FILE}" \
+        "SELECT * FROM history WHERE command LIKE '%${SEARCH}%';" \
+        | grep "$SEARCH"
 }
 
 function stc-search()
@@ -422,4 +441,12 @@ function sshfzf()
     if [[ -n $target ]]; then
         ssh "$target"
     fi
+}
+
+# fzf Persistent history
+function h() {
+    preview_command="sqlite3 \"${PERSISTENT_HIST_FILE}\" -header -column \"SELECT * FROM history WHERE command='{}' ORDER BY id DESC\""
+    command=$(sqlite3 "${PERSISTENT_HIST_FILE}" \
+        "SELECT DISTINCT command FROM history;" \
+        | FZF_DEFAULT_OPTS="--reverse --preview '${preview_command}' --preview-window down" fzf)
 }
