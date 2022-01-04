@@ -356,13 +356,6 @@ function dcb()
     echo ""
 }
 
-function tinydns_ipv6()
-{
-    # Convert IPv6 address into tinydns v6 format
-    ipv6calc -q --printfulluncompressed "$@" \
-        | tr -d :
-}
-
 function ttt()
 {
     # Immediately add and start a new task in taskwarrior, designed for
