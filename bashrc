@@ -67,12 +67,11 @@ function log_bash_persistent_history() {
     local command
     local return_code=$1
 
-    hist=$(history 1)
+    hist=$(history 1 | tr -s ' ')
     # 1 is space
     number=$(echo "${hist}" | cut -d' ' -f2)
-    # 3 is space
-    datetime=$(echo "${hist}" | cut -d' ' -f4)
-    command=$(echo "${hist}" | cut -d' ' -f5-)
+    datetime=$(echo "${hist}" | cut -d' ' -f3)
+    command=$(echo "${hist}" | cut -d' ' -f4-)
 
     # Double single quoting stuff fixes escaping issues, not sure why? TODO
     command=${command//\'/''/}
