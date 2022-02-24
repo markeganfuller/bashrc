@@ -76,8 +76,10 @@ function log_bash_persistent_history() {
     # Double single quoting stuff fixes escaping issues, not sure why? TODO
     command=${command//\'/''/}
 
-    sqlite3 "${PERSISTENT_HIST_FILE}" \
-        "INSERT INTO history (number, datetime, command, return_code) VALUES (${number}, '${datetime}', '${command}', ${return_code});"
+    sqlite3 "${PERSISTENT_HIST_FILE}" <<EOF
+.timeout 5000
+INSERT INTO history (number, datetime, command, return_code) VALUES (${number}, '${datetime}', '${command}', ${return_code});
+EOF
 }
 
 
@@ -435,10 +437,19 @@ function sshfzf()
     fi
 }
 
+function h_preview() {
+    command="${*}"
+    command=$(echo "${command}" | sed "s/'/''/g")
+    sqlite3 "${PERSISTENT_HIST_FILE}" -header -column "SELECT * FROM history WHERE command LIKE '${command}%' ORDER BY id DESC"
+}
+
 # fzf Persistent history
 function h() {
-    preview_command="sqlite3 \"${PERSISTENT_HIST_FILE}\" -header -column \"SELECT * FROM history WHERE command='{}' ORDER BY id DESC\""
+    export PERSISTENT_HIST_FILE
+    export -f h_preview
+
     command=$(sqlite3 "${PERSISTENT_HIST_FILE}" \
         "SELECT DISTINCT command FROM history;" \
-        | FZF_DEFAULT_OPTS="--reverse --preview '${preview_command}' --preview-window down" fzf)
+        | FZF_DEFAULT_OPTS="--reverse --preview '. ~/.bashrc && h_preview {}' --preview-window down" fzf)
+    echo "$command"
 }
