@@ -18,11 +18,11 @@ fi
 # Useful constants ------------------------------------------------------------
 
 # Colors
-export C_CLR='\[\e[0m\]'
-export C_RED='\[\e[0;31m\]'
-export C_GREEN='\[\e[0;32m\]'
-export C_BLUE='\[\e[0;34m\]'
-export C_YELLOW='\[\e[0;33m\]'
+export C_CLR='\e[0m'
+export C_RED='\e[0;31m'
+export C_GREEN='\e[0;32m'
+export C_BLUE='\e[0;34m'
+export C_YELLOW='\e[0;33m'
 
 # Regexes
 alias ls_regexs="env | grep 'REGEX[^=]*' -o"
@@ -438,6 +438,10 @@ function sshfzf()
 }
 
 function h_preview() {
+    # some helper text
+    echo -e "${C_RED}'${C_CLR}exact | ${C_RED}^${C_CLR}prefix-exact | suffix-exact${C_RED}\$${C_CLR} | ${C_RED}!${C_CLR}inverse-exact | ${C_RED}!^${C_CLR}inverse-prefix-exact | ${C_RED}!${C_CLR}inverse-suffix-exact${C_RED}\$${C_CLR}"
+    echo -e "_______________________________________\n"
+
     command="${*}"
     command=$(echo "${command}" | sed "s/'/''/g")
     sqlite3 "${PERSISTENT_HIST_FILE}" -header -column "SELECT * FROM history WHERE command LIKE '${command}%' ORDER BY id DESC"
@@ -445,7 +449,7 @@ function h_preview() {
 
 # fzf Persistent history
 function h() {
-    export PERSISTENT_HIST_FILE
+    export PERSISTENT_HIST_FILE C_CLR C_BLUE
     export -f h_preview
 
     command=$(sqlite3 "${PERSISTENT_HIST_FILE}" \
