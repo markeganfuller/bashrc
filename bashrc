@@ -24,6 +24,13 @@ export C_GREEN='\e[0;32m'
 export C_BLUE='\e[0;34m'
 export C_YELLOW='\e[0;33m'
 
+# Colors formatted for prompt
+export C_P_CLR='\[\e[0m\]'
+export C_P_RED='\[\e[0;31m\]'
+export C_P_GREEN='\[\e[0;32m\]'
+export C_P_BLUE='\[\e[0;34m\]'
+export C_P_YELLOW='\[\e[0;33m\]'
+
 # Regexes
 alias ls_regexs="env | grep 'REGEX[^=]*' -o"
 # Note its a 'dumb' ip regex, accepts 999.999.999.999
@@ -89,7 +96,7 @@ function __prompt_command() {
 
     # Display if were recording with asciinema
     if [[ $ASCIINEMA_REC ]]; then
-        local REC="{${C_RED}REC${C_CLR}}"
+        local REC="{${C_P_RED}REC${C_P_CLR}}"
     else
         local REC=""
     fi
@@ -98,12 +105,12 @@ function __prompt_command() {
     local VENV="${VIRTUAL_ENV}"
     if [ -n "$VENV" ]; then
         VENV_NAME=$(basename "${VENV}")
-        VENV="(${C_YELLOW}${VENV_NAME}${C_CLR})"
+        VENV="(${C_P_YELLOW}${VENV_NAME}${C_P_CLR})"
     fi
 
     # Show exit code if not 0
     if [ $EXIT != 0 ]; then
-        local EXIT_STR="[${C_RED}${EXIT}${C_CLR}]"
+        local EXIT_STR="[${C_P_RED}${EXIT}${C_P_CLR}]"
     else
         local EXIT_STR=""
     fi
@@ -118,8 +125,8 @@ function __prompt_command() {
         local ROOT_COLOR=""
         local ROOT_COLOR_END=""
     else
-        local ROOT_COLOR=$C_RED
-        local ROOT_COLOR_END=$C_CLR
+        local ROOT_COLOR=$C_P_RED
+        local ROOT_COLOR_END=$C_P_CLR
     fi
 
     PS1=""
@@ -128,7 +135,7 @@ function __prompt_command() {
     PS1+="${VENV}"
     PS1+="${ROOT_COLOR}\\u${SSH}${ROOT_COLOR_END}"
     PS1+=":\\W"
-    PS1+="${C_RED}\$${C_CLR}"
+    PS1+="${C_P_RED}\$${C_P_CLR}"
     PS1+=" "
 }
 
