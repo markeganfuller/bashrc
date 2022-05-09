@@ -170,6 +170,7 @@ alias su='sudo bash'  # Rebind su, if su is needed /bin/su
 alias sudo='sudo '  # Fixes bash ignoring aliases after sudo
 
 alias tableflip="echo '(╯°□°）╯︵ ┻━┻'"
+alias shrug="echo '¯\_(ツ)_/¯'"
 alias units="units --verbose --one-line --digits 15 "
 alias vimm="vim -u NONE"  # Vim without plugins
 alias botchcli="rlwrap botchcli"  # Wrap botchcli with rlwrap
