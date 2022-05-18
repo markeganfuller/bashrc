@@ -4,7 +4,7 @@
 # Path adjustments ------------------------------------------------------------
 # Add home/bin to PATH
 if [ -d "$HOME/bin" ]; then
-    PATH=$PATH:$HOME/bin
+    PATH=$HOME/bin:$PATH
 fi
 # Add /sbin to PATH
 if [ -d /sbin ]; then
