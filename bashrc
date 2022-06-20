@@ -146,7 +146,9 @@ export VISUAL='vim'
 # Setup Virtual Env Wrapper ---------------------------------------------------
 export WORKON_HOME=${HOME}/.virtualenvs
 # shellcheck disable=SC1094
-source /usr/bin/virtualenvwrapper.sh
+if [[ -e /usr/bin/virtualenvwrapper.sh ]]; then
+    source /usr/bin/virtualenvwrapper.sh
+fi
 
 # Misc Setup ------------------------------------------------------------------
 # make journalctl show full log lines, no truncation
