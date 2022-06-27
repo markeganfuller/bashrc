@@ -482,3 +482,8 @@ function h() {
         | FZF_DEFAULT_OPTS="--reverse --preview '. ~/.bashrc && h_preview {}' --preview-window down --no-mouse" fzf)
     echo "$command"
 }
+
+# Finally load any local config (Used for machine or work specific stuff)
+if [[ -e "${HOME}/.bashrc_local" ]]; then
+    source "${HOME}/.bashrc_local"
+fi
