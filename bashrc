@@ -58,6 +58,16 @@ shopt -s checkwinsize
 # Set TERM
 TERM=xterm-256color
 
+# Check dotfiles for local changes --------------------------------------------
+pushd . >> /dev/null
+if [[ -d ${HOME}/repos/mine/dotfiles ]]; then
+    for dir in "${HOME}/repos/mine/dotfiles"/*/; do
+        cd "$dir" || return
+        git status --porcelain
+    done
+fi
+popd >> /dev/null
+
 # Setup Prompt ----------------------------------------------------------------
 export PROMPT_COMMAND=__prompt_command
 
