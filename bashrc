@@ -157,7 +157,12 @@ export VISUAL='vim'
 export WORKON_HOME=${HOME}/.virtualenvs
 # shellcheck disable=SC1094
 if [[ -e /usr/bin/virtualenvwrapper.sh ]]; then
+    # For Arch
     source /usr/bin/virtualenvwrapper.sh
+elif [[ -e /usr/local/bin/virtualenvwrapper.sh ]]; then
+    # For Ubuntu
+    export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
+    source /usr/local/bin/virtualenvwrapper.sh
 fi
 
 # Misc Setup ------------------------------------------------------------------
