@@ -416,7 +416,7 @@ function scp_vagrant()
 function cdf()
 {
     builtin cd "${HOME}" || exit 1
-    target="$(FZF_DEFAULT_OPTS='--reverse --preview "ls {}" --preview-window down' FZF_DEFAULT_COMMAND='fd --type d --hidden' fzf)"
+    target="$(FZF_DEFAULT_OPTS='--reverse --preview "ls {}" --preview-window down' FZF_DEFAULT_COMMAND='fd --type d --hidden --follow' fzf)"
     if [[ -n $target ]]; then
         cd "$target" || return
     fi
