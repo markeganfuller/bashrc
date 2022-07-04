@@ -68,6 +68,11 @@ if [[ -d ${HOME}/repos/mine/dotfiles ]]; then
 fi
 popd >> /dev/null
 
+# Git settings for prompt output
+export GIT_PS1_SHOWDIRTYSTATE=1
+export GIT_PS1_SHOWSTASHSTATE=1
+export GIT_PS1_SHOWUNTRACKEDFILES=1
+
 # Setup Prompt ----------------------------------------------------------------
 export PROMPT_COMMAND=__prompt_command
 
@@ -144,7 +149,9 @@ function __prompt_command() {
     PS1+="${REC}"
     PS1+="${VENV}"
     PS1+="${ROOT_COLOR}\\u${SSH}${ROOT_COLOR_END}"
-    PS1+=":\\W"
+    PS1+=":"
+    PS1+="${C_P_YELLOW}$(__git_ps1 "(%s)")${C_P_CLR}"
+    PS1+="\\W"
     PS1+="${C_P_RED}\$${C_P_CLR}"
     PS1+=" "
 }
