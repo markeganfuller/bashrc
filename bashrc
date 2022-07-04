@@ -176,12 +176,6 @@ export FZF_DEFAULT_OPTS='--reverse --preview "head -n 30 {} | pygmentize -O styl
 
 # Aliases ---------------------------------------------------------------------
 # Not in seperate file for ease of deployment
-
-alias gitgraph="git log --graph --full-history --all --oneline --decorate" # full graph
-alias gitgraph_one="git log --graph --full-history --oneline" # single branch
-alias gitundocommit="echo 'git reset --soft HEAD^'"  # Git how to
-alias gitundomerge="echo 'git reset --hard ORIG_HEAD'"  # Git how to
-
 alias nicebash='sudo nice -n -20 bash'  # Nice'd Bash, spawns a bash process with highest priority
 alias su='sudo bash'  # Rebind su, if su is needed /bin/su
 alias sudo='sudo '  # Fixes bash ignoring aliases after sudo
