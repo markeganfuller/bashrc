@@ -484,13 +484,23 @@ function h() {
     echo "$command"
 }
 
-# Finally load any local config (Used for machine or work specific stuff)
-if [[ -e "${HOME}/.bashrc_local" ]]; then
-    source "${HOME}/.bashrc_local"
-fi
+# Setup a branch with worktrees
+function gwt_branch() {
+    # Assumes you're in a worktree git repo
+    local branch=$1
+
+    if ! git branch --all | grep "$branch" -q ; then
+        # Branch doesn't exist so create
+        git worktree add "../${branch}" -b "$branch"
+    else
+        git worktree add "../${branch}" "$branch"
+    fi
+
+    cd "../${branch}" || return
+}
 
 # Clone a repo for use with worktrees
-function git_worktree_clone() {
+function gwt_clone() {
     local url=$1
     local dir=$2
 
@@ -503,6 +513,11 @@ function git_worktree_clone() {
     main_branch_name=$(git branch | awk '{print $2}')
 
     git checkout -b z_dummy_worktree_branch_z
-    git worktree add "../${main_branch_name}" "$main_branch_name"
-    cd .. || exit 1
+    gwt_branch "$main_branch_name"
 }
+
+# -----------------------------------------------------------------------------
+# Finally load any local config (Used for machine or work specific stuff)
+if [[ -e "${HOME}/.bashrc_local" ]]; then
+    source "${HOME}/.bashrc_local"
+fi
