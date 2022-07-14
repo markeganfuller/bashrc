@@ -491,6 +491,15 @@ function h() {
     echo "$command"
 }
 
+function gwt(){
+    # Shortcut to list worktrees
+    # Hide dummy branch
+    # Color branch
+    git worktree list \
+        | grep -v z_dummy_worktree_branch_z \
+        | sed -e "s/\[/${C_S_YELLOW}/" -e "s/\]/${C_S_CLR}/"
+}
+
 # Setup a branch with worktrees
 function gwt_branch() {
     # Assumes you're in a worktree git repo
