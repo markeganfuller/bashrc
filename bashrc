@@ -24,12 +24,19 @@ export C_GREEN='\e[0;32m'
 export C_BLUE='\e[0;34m'
 export C_YELLOW='\e[0;33m'
 
-# Colors formatted for prompt
+## Colors formatted for prompt
 export C_P_CLR='\[\e[0m\]'
 export C_P_RED='\[\e[0;31m\]'
 export C_P_GREEN='\[\e[0;32m\]'
 export C_P_BLUE='\[\e[0;34m\]'
 export C_P_YELLOW='\[\e[0;33m\]'
+
+## Colors formatted for sed
+export C_S_CLR='\x1b[0m'
+export C_S_RED='\x1b[0;31m'
+export C_S_GREEN='\x1b[0;32m'
+export C_S_BLUE='\x1b[0;34m'
+export C_S_YELLOW='\x1b[0;33m'
 
 # Regexes
 alias ls_regexs="env | grep 'REGEX[^=]*' -o"
