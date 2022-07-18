@@ -420,11 +420,26 @@ function scp_vagrant()
     rm "${CONFIG}"
 }
 
-# fzf CD
+# fzf CD (jumps to homedir first and searches from there)
 function cdf()
 {
-    builtin cd "${HOME}" || exit 1
-    target="$(FZF_DEFAULT_OPTS='--reverse --preview "ls {}" --preview-window down' FZF_DEFAULT_COMMAND='fd --type d --hidden --follow' fzf)"
+    builtin cd "${HOME}" || return
+    target=$(fd --type d --hidden --follow \
+        | fzf --reverse \
+              --preview "ls {}" \
+              --preview-window down)
+    if [[ -n $target ]]; then
+        cd "$target" || return
+    fi
+}
+
+# fzf local CD
+function cdff()
+{
+    target=$(fd --type d --hidden --follow \
+        | fzf --reverse \
+              --preview "ls {}" \
+              --preview-window down)
     if [[ -n $target ]]; then
         cd "$target" || return
     fi
@@ -491,13 +506,39 @@ function h() {
     echo "$command"
 }
 
+# Shortcut to list worktrees, with some color
 function gwt(){
-    # Shortcut to list worktrees
     # Hide dummy branch
     # Color branch
     git worktree list \
         | grep -v z_dummy_worktree_branch_z \
         | sed -e "s/\[/${C_S_YELLOW}/" -e "s/\]/${C_S_CLR}/"
+}
+
+# CD to main/master (default) branch for worktree
+function cdm(){
+    local main_branch_name
+    main_branch_name=$(git remote show origin | sed -n '/HEAD branch/s/.*: //p')
+    local dir
+    dir=$(git worktree list \
+        | grep "\[${main_branch_name}\]" \
+        | awk '{print $1}')
+
+    cd "$dir" || return
+}
+
+# CD to another worktree
+function cdw(){
+    target=$(
+        git worktree list \
+        | grep -v z_dummy_worktree_branch_z \
+        | awk '{print $1}' \
+        | fzf --preview "cd {};  git -c color.status=always status" \
+              --preview-window down
+    )
+    if [[ -n $target ]]; then
+        cd "$target" || return
+    fi
 }
 
 # Setup a branch with worktrees
