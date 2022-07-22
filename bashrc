@@ -546,6 +546,9 @@ function gwt_branch() {
     # Assumes you're in a worktree git repo
     local branch=$1
 
+    # Jump to the top level git dir
+    cdg || return
+
     if ! git branch --all | grep "$branch" -q ; then
         # Branch doesn't exist so create
         git worktree add "../${branch}" -b "$branch"
