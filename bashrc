@@ -96,11 +96,12 @@ function log_bash_persistent_history() {
     local command
     local return_code=$1
 
-    hist=$(history 1 | tr -s ' ')
-    # 1 is space
-    number=$(echo "${hist}" | cut -d' ' -f2)
-    datetime=$(echo "${hist}" | cut -d' ' -f3)
-    command=$(echo "${hist}" | cut -d' ' -f4-)
+    # position 1 may be a space, this condenses multiple spaces to signle and
+    # strips spaces at the start
+    hist=$(history 1 | tr -s ' ' | sed 's/^ //')
+    number=$(echo "${hist}" | cut -d' ' -f1)
+    datetime=$(echo "${hist}" | cut -d' ' -f2)
+    command=$(echo "${hist}" | cut -d' ' -f3-)
 
     # Double single quoting stuff fixes escaping issues, not sure why? TODO
     command=${command//\'/''/}
