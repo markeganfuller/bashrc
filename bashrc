@@ -421,6 +421,15 @@ function scp_vagrant()
     rm "${CONFIG}"
 }
 
+function check_ssl_server()
+{
+    TARGET=$1
+    PORT=${2:-443}
+    echo ''\
+        | openssl s_client -showcerts -servername "${TARGET}" -connect "${TARGET}:${PORT}" 2>/dev/null \
+        | openssl x509 -inform pem -noout -text
+}
+
 # fzf CD (jumps to homedir first and searches from there)
 function cdf()
 {
