@@ -86,15 +86,17 @@ export PROMPT_COMMAND=__prompt_command
 function log_bash_persistent_history() {
     # Sqlite logging of commands
     # Table creation
-    # CREATE TABLE history (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, number INTEGER, datetime TEXT, command TEXT, return_code INTEGER)
+    # CREATE TABLE history (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, number INTEGER, datetime TEXT, command TEXT, return_code INTEGER, pwd TEXT, pid INTEGER);
+    # Table column addition
+    # ALTER TABLE history ADD COLUMN pwd TEXT DEFAULT '';
 
-    # TODO pwd
-    # TODO session info (tty etc)
     local hist
     local number
     local datetime
     local command
     local return_code=$1
+    local pwd=$PWD
+    local pid=$$
 
     # position 1 may be a space, this condenses multiple spaces to signle and
     # strips spaces at the start
@@ -108,7 +110,8 @@ function log_bash_persistent_history() {
 
     sqlite3 "${PERSISTENT_HIST_FILE}" <<EOF
 .timeout 5000
-INSERT INTO history (number, datetime, command, return_code) VALUES (${number}, '${datetime}', '${command}', ${return_code});
+INSERT INTO history (number, datetime, command, return_code, pwd, pid)
+VALUES (${number}, '${datetime}', '${command}', ${return_code}, '${pwd}', ${pid});
 EOF
 }
 
