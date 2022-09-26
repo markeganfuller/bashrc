@@ -216,7 +216,6 @@ alias serial_conn='screen /dev/ttyUSB0 9600,cs8'
 # Aliases - App options -------------------------------------------------------
 
 # Grep: Ignore .git dirs and enable color
-alias egrep="egrep --exclude-dir=.git --color=auto"
 alias grep="grep --exclude-dir=.git --color=auto"
 alias ggrep="git grep"
 
