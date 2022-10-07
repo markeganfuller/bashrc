@@ -216,6 +216,9 @@ alias sshp="ssh -o PreferredAuthentications=keyboard-interactive,password -o Pub
 alias sshcis="ssh -o Kexalgorithms=+diffie-hellman-group14-sha1,diffie-hellman-group1-sha1 -o Hostkeyalgorithms=+ssh-dss,ssh-rsa -o PubkeyAcceptedAlgorithms=+ssh-rsa -o Ciphers=+aes256-cbc -o Pubkeyauthentication=no -a"
 alias serial_conn='screen /dev/ttyUSB0 9600,cs8'
 
+# Audio alert for when a long running task finishes
+alias bp='spd-say "Alert: Command ended, Exit code: $?"'
+
 # Aliases - App options -------------------------------------------------------
 
 # Grep: Ignore .git dirs and enable color
