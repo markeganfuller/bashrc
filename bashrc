@@ -23,6 +23,7 @@ export C_RED='\e[0;31m'
 export C_GREEN='\e[0;32m'
 export C_BLUE='\e[0;34m'
 export C_YELLOW='\e[0;33m'
+export C_BOLD='\e[1m'
 
 ## Colors formatted for prompt
 export C_P_CLR='\[\e[0m\]'
@@ -244,6 +245,7 @@ function gitdiffpull() {
     git diff "${branch}@{1}" "${branch}"
 }
 
+# TODO: RVM breaks this because it has its own CD function
 function cd()
 {
     # Change dir then list new directory contents, replaces cd
@@ -277,6 +279,29 @@ function cdb()
     NEWPWD=$(pwd | perl -pe "$RGX")
     echo "$NEWPWD"
     cd "$NEWPWD" || return
+}
+
+function cdr()
+{
+    # change to a repository
+    # Any dir under repos/*/
+    target=$(
+        fd --hidden --no-ignore --no-ignore-vcs --regex '^.git$' \
+            --exclude extmodules ~/repos --exec dirname \
+        | sort -u \
+        | fzf --preview "cd {};
+            echo -e '$C_BOLD$C_YELLOW';
+            git remote get-url origin \
+                | sed 's/.*\/\(.*\).git/\1/';
+            echo -e '$C_CLR' ; \
+            git -c color.status=always status" \
+            --preview-window down \
+            --delimiter='/' \
+            --nth=-1
+    )
+    if [[ -n $target ]]; then
+        cd "$target" || return
+    fi
 }
 
 function crontab()
