@@ -23,6 +23,7 @@ export C_RED='\e[0;31m'
 export C_GREEN='\e[0;32m'
 export C_BLUE='\e[0;34m'
 export C_YELLOW='\e[0;33m'
+export C_MAGENTA='\e[38;5;201m'
 export C_BOLD='\e[1m'
 
 ## Colors formatted for prompt
@@ -30,7 +31,9 @@ export C_P_CLR='\[\e[0m\]'
 export C_P_RED='\[\e[0;31m\]'
 export C_P_GREEN='\[\e[0;32m\]'
 export C_P_BLUE='\[\e[0;34m\]'
+export C_P_MAGENTA='\[\e[38;5;201m\]'
 export C_P_YELLOW='\[\e[0;33m\]'
+export C_P_BOLD='\[\e[1m\]'
 
 ## Colors formatted for sed
 export C_S_CLR='\x1b[0m'
@@ -159,12 +162,20 @@ function __prompt_command() {
         local ROOT_COLOR_END=$C_P_CLR
     fi
 
+    # If in or below ~/repos/*test falg that we're in test
+    if [[ $(pwd) =~ ${HOME}/repos/[^/]*test(/|$) ]]; then
+        TEST="${C_P_MAGENTA}[T]${C_P_CLR}"
+    else
+        TEST=""
+    fi
+
     PS1=""
     PS1+="${EXIT_STR}"
     PS1+="${REC}"
     PS1+="${VENV}"
     PS1+="${ROOT_COLOR}\\u${SSH}${ROOT_COLOR_END}"
     PS1+=":"
+    PS1+="$TEST"
     PS1+="${C_P_YELLOW}$(__git_ps1 "(%s)")${C_P_CLR}"
     PS1+="\\W"
     PS1+="${C_P_RED}\$${C_P_CLR}"
