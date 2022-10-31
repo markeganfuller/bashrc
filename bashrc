@@ -183,7 +183,7 @@ function __prompt_command() {
         local ROOT_COLOR_END=$C_P_CLR
     fi
 
-    # If in or below ~/repos/*test falg that we're in test
+    # If in or below ~/repos/*test flag that we're in test
     if [[ $(pwd) =~ ${HOME}/repos/[^/]*test(/|$) ]]; then
         TEST="${C_P_MAGENTA}[T]${C_P_CLR}"
     else
