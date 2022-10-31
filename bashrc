@@ -51,6 +51,11 @@ export REGEX_ISO_DATETIME='[0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}T[0-9]\{2\}:[0-9]\{2\
 # Fix ls colors for missing / orphaned files
 export LS_COLORS="mi=00:or=40;31;01"
 
+# Settings for cdr function
+export CDR_WORK_DIRS=() # Should be overriden in .bashrc_local
+export CDR_MY_DIRS=('mine')
+export CDR_OTHER_DIRS=('other')
+
 # Setup Bash History ----------------------------------------------------------
 HISTCONTROL=ignoreboth  # no duplicates/ignore lines starting with space
 HISTFILESIZE=  # Unlimited history file
@@ -315,21 +320,50 @@ function cdb()
 
 function cdr()
 {
-    # change to a repository
+    # Change directory to a repository
+
     # Any dir under repos/*/
-    target=$(
-        fd --hidden --no-ignore --no-ignore-vcs --regex '^.git$' \
-            --exclude extmodules ~/repos --exec dirname \
-        | sort -u \
-        | fzf --preview "cd {};
-            echo -e '$C_BOLD$C_YELLOW';
-            git remote get-url origin \
-                | sed 's/.*\/\(.*\).git/\1/';
-            echo -e '$C_CLR' ; \
-            git -c color.status=always status" \
+    dirs=$(fd --hidden --no-ignore --no-ignore-vcs --regex '^.git$' \
+        --exclude extmodules ~/repos --exec dirname \
+        | sort -u
+    )
+
+    # This mess is to ensure work stuff sorts first
+    work_dirs=()
+    for d in "${CDR_WORK_DIRS[@]}"; do
+        work_dirs+=($(echo "$dirs" | grep "$d"))
+    done
+
+    # Then my repos
+    my_dirs=()
+    for d in "${CDR_MY_DIRS[@]}"; do
+        my_dirs+=($(echo "$dirs" | grep "$d"))
+    done
+
+    # Then other repos
+    other_dirs=()
+    for d in "${CDR_OTHER_DIRS[@]}"; do
+        other_dirs+=($(echo "$dirs" | grep "$d"))
+    done
+
+    # Note if theres another directory under repos it *WON'T* be searched
+
+    dirs_ordered+=(${work_dirs[@]})
+    dirs_ordered+=(${my_dirs[@]})
+    dirs_ordered+=(${other_dirs[@]})
+
+    target=$(printf "%s\n" "${dirs_ordered[@]}" \
+        | fzf \
             --preview-window down \
             --delimiter='/' \
-            --nth=-1
+            --nth=-1 \
+            --no-sort \
+            --preview "cd {};
+                echo -e '$C_BOLD$C_YELLOW';
+                git remote get-url origin \
+                | sed 's/.*\/\(.*\).git/\1/';
+                echo -e '$C_CLR' ; \
+                git -c color.status=always status"
     )
     if [[ -n $target ]]; then
         cd "$target" || return
