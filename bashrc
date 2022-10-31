@@ -69,15 +69,36 @@ shopt -s checkwinsize
 # Set TERM
 TERM=xterm-256color
 
-# Check dotfiles for local changes --------------------------------------------
-pushd . >> /dev/null
+# Check dotfiles for local changes (only happens on first run) ----------------
+
+function check_git_dir(){
+    dir=$1
+
+    pushd . >> /dev/null
+    cd "$dir" || return
+    status=$(git status --porcelain)
+    if [[ $status != "" ]]; then
+        echo "$dir"
+        echo -e "${C_YELLOW}$status${C_CLR}"
+    fi
+
+    # shellcheck disable=SC2164
+    popd >> /dev/null
+}
+
+# Check dot files
 if [[ -d ${HOME}/repos/mine/dotfiles ]]; then
     for dir in "${HOME}/repos/mine/dotfiles"/*/; do
-        cd "$dir" || return
-        git status --porcelain
+        check_git_dir "$dir"
     done
 fi
-popd >> /dev/null
+
+# Also check bin
+if [[ -d "${HOME}/bin" ]]; then
+    check_git_dir "${HOME}/bin"
+fi
+
+unset -f check_git_dir  # Not needed after initial run
 
 # Git settings for prompt output
 if [[ -f /usr/share/git/completion/git-prompt.sh ]]; then
@@ -376,6 +397,7 @@ function persistent-history()
 
 function stc-search()
 {
+    # TODO Use fzf with preview
     # Search STC
     SEARCH=$*
     STC_BASE_DIR="${HOME}/repos/mine/stc"
