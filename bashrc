@@ -348,7 +348,7 @@ function cdr()
 
     # Note if theres another directory under repos it *WON'T* be searched
 
-    dirs_ordered+=(${work_dirs[@]})
+    dirs_ordered=(${work_dirs[@]})
     dirs_ordered+=(${my_dirs[@]})
     dirs_ordered+=(${other_dirs[@]})
 
