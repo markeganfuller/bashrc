@@ -322,35 +322,41 @@ function cdr()
 {
     # Change directory to a repository
 
+    local repo_dir="${HOME}/repos"
+
     # Any dir under repos/*/
+    local dirs
     dirs=$(fd --hidden --no-ignore --no-ignore-vcs --regex '^.git$' \
-        --exclude extmodules ~/repos --exec dirname \
+        --exclude extmodules "${repo_dir}" --exec dirname \
         | sort -u
     )
 
     # This mess is to ensure work stuff sorts first
-    work_dirs=()
+    # Note if theres another directory under repos it *WON'T* be searched
+    # Work repos
+    local work_dirs=()
     for d in "${CDR_WORK_DIRS[@]}"; do
-        work_dirs+=($(echo "$dirs" | grep "$d"))
+        mapfile -t -O "${#work_dirs[@]}" work_dirs \
+            < <(echo "$dirs" | grep "${repo_dir}/${d}/")
     done
 
     # Then my repos
-    my_dirs=()
+    local my_dirs=()
     for d in "${CDR_MY_DIRS[@]}"; do
-        my_dirs+=($(echo "$dirs" | grep "$d"))
+        mapfile -t -O "${#my_dirs[@]}" my_dirs \
+            < <(echo "$dirs" | grep "${repo_dir}/${d}/")
     done
 
     # Then other repos
-    other_dirs=()
+    local other_dirs=()
     for d in "${CDR_OTHER_DIRS[@]}"; do
-        other_dirs+=($(echo "$dirs" | grep "$d"))
+        mapfile -t -O "${#other_dirs[@]}" other_dirs \
+            < <(echo "$dirs" | grep "${repo_dir}/${d}/")
     done
 
-    # Note if theres another directory under repos it *WON'T* be searched
-
-    dirs_ordered=(${work_dirs[@]})
-    dirs_ordered+=(${my_dirs[@]})
-    dirs_ordered+=(${other_dirs[@]})
+    local dirs_ordered=("${work_dirs[@]}")
+    dirs_ordered+=("${my_dirs[@]}")
+    dirs_ordered+=("${other_dirs[@]}")
 
     target=$(printf "%s\n" "${dirs_ordered[@]}" \
         | fzf \
