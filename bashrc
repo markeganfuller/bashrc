@@ -190,9 +190,9 @@ function __prompt_command() {
 
     # If in or below ~/repos/*test flag that we're in test
     if [[ $(pwd) =~ ${HOME}/repos/[^/]*test(/|$) ]]; then
-        TEST="${C_P_MAGENTA}[T]${C_P_CLR}"
+        local TEST="${C_P_MAGENTA}[T]${C_P_CLR}"
     else
-        TEST=""
+        local TEST=""
     fi
 
     PS1=""
@@ -365,10 +365,14 @@ function cdr()
             --nth=-1 \
             --no-sort \
             --preview "cd {};
-                echo -e '$C_BOLD$C_YELLOW';
+                if [[ {} =~ ${HOME}/repos/[^/]*test(/|$).* ]]; then
+                    echo -n -e '${C_MAGENTA}'
+                fi
+                pwd
+                echo -e '${C_BOLD}${C_YELLOW}';
                 git remote get-url origin \
-                | sed 's/.*\/\(.*\).git/\1/';
-                echo -e '$C_CLR' ; \
+                    | sed 's|.*/\([^/]*\)\(.git\)*$|\1|';
+                echo -e '${C_CLR}' ; \
                 git -c color.status=always status"
     )
     if [[ -n $target ]]; then
