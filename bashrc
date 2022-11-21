@@ -685,8 +685,13 @@ function gwt_clone() {
     local url=$1
     local dir=$2
 
-    mkdir "$dir"
-    cd "$dir" || exit 1
+    if [ "$#" -ne 2 ]; then
+        echo "Usage: gwt_clone <url> <directory>"
+        return 1
+    fi
+
+    mkdir "$dir" || return 1
+    cd "$dir" || return 1
     git clone "$url" z_dummy_worktree_branch_z
 
     cd z_dummy_worktree_branch_z || exit 1
