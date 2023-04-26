@@ -42,6 +42,17 @@ export C_S_GREEN='\x1b[0;32m'
 export C_S_BLUE='\x1b[0;34m'
 export C_S_YELLOW='\x1b[0;33m'
 
+## Hex colours
+export C_H_RED="#FF0000"
+export C_H_GREEN="#00FF00"
+export C_H_BLUE="#0000FF"
+export C_H_MAGENTA="#FF00FF"
+export C_H_YELLOW="#FFFF00"
+export C_H_GREY="#202020"
+export C_H_BLACK="#000000"
+export C_H_WHITE="#FFFFFF"
+export C_H_OFFWHITE="#AAAAAA"
+
 # Regexes
 alias ls_regexs="env | grep 'REGEX[^=]*' -o"
 # Note its a 'dumb' ip regex, accepts 999.999.999.999
@@ -231,7 +242,16 @@ export SYSTEMD_LESS=FRXMK
 export VAGRANT_DEFAULT_PROVIDER=libvirt
 # FZF include hidden files
 export FZF_DEFAULT_COMMAND="fd --type f --hidden"
-export FZF_DEFAULT_OPTS='--reverse --preview "head -n 30 {} | pygmentize -O style=monokai" --preview-window down'
+
+FZF_DEFAULT_OPTS="--reverse --preview"
+FZF_DEFAULT_OPTS+=" 'head -n 30 {} | pygmentize -O style=monokai'"
+FZF_DEFAULT_OPTS+=" --preview-window down "
+FZF_DEFAULT_OPTS+="--color=bg+:${C_H_GREY},bg:${C_H_BLACK},border:${C_H_GREY}"
+FZF_DEFAULT_OPTS+=",spinner:${C_H_MAGENTA},hl:${C_H_MAGENTA}"
+FZF_DEFAULT_OPTS+=",header:${C_H_YELLOW},info:${C_H_GREY},prompt:${C_H_WHITE}"
+FZF_DEFAULT_OPTS+=",gutter:${C_H_BLACK},fg+:${C_H_OFFWHITE}"
+FZF_DEFAULT_OPTS+=",hl+:${C_H_MAGENTA},pointer:${C_H_MAGENTA}"
+export FZF_DEFAULT_OPTS
 
 # Aliases ---------------------------------------------------------------------
 # Not in seperate file for ease of deployment
@@ -318,10 +338,27 @@ function cdb()
     cd "$NEWPWD" || return
 }
 
-function cdr()
-{
+function cdr_preview() {
+    # some helper text
+    echo -e "${C_RED}'${C_CLR}exact | ${C_RED}^${C_CLR}prefix-exact | suffix-exact${C_RED}\$${C_CLR} | ${C_RED}!${C_CLR}inverse-exact | ${C_RED}!^${C_CLR}inverse-prefix-exact | ${C_RED}!${C_CLR}inverse-suffix-exact${C_RED}\$${C_CLR}"
+    echo -e "_______________________________________\n"
+
+    path="${*}"
+    cd "$path" || exit
+    if [[ $path =~ ${HOME}/repos/[^/]*test(/|$).* ]]; then
+        echo -n -e "$C_MAGENTA"
+    fi
+    pwd
+    echo -e "${C_BOLD}${C_YELLOW}"
+    git remote get-url origin | sed 's|.*/\([^/]*\)\(.git\)*$|\1|';
+    echo -e "${C_CLR}"
+    git -c color.status=always status
+}
+
+function cdr() {
     # Change directory to a repository
 
+    export -f cdr_preview
     local repo_dir="${HOME}/repos"
 
     # Any dir under repos/*/
@@ -359,22 +396,16 @@ function cdr()
     dirs_ordered+=("${other_dirs[@]}")
 
     target=$(printf "%s\n" "${dirs_ordered[@]}" \
+        | grep -v "z_dummy_worktree_branch_z" \
         | fzf \
             --preview-window down \
             --delimiter='/' \
-            --nth=-1 \
+            --nth=-2.. \
             --no-sort \
-            --preview "cd {};
-                if [[ {} =~ ${HOME}/repos/[^/]*test(/|$).* ]]; then
-                    echo -n -e '${C_MAGENTA}'
-                fi
-                pwd
-                echo -e '${C_BOLD}${C_YELLOW}';
-                git remote get-url origin \
-                    | sed 's|.*/\([^/]*\)\(.git\)*$|\1|';
-                echo -e '${C_CLR}' ; \
-                git -c color.status=always status"
+            --preview ". ~/.bashrc && cdr_preview {}" \
+            --header="cdr"
     )
+
     if [[ -n $target ]]; then
         cd "$target" || return
     fi
@@ -548,7 +579,9 @@ function cdf()
     target=$(fd --type d --hidden --follow \
         | fzf --reverse \
               --preview "ls {}" \
-              --preview-window down)
+              --preview-window down \
+              --header="cdf"
+    )
     if [[ -n $target ]]; then
         cd "$target" || return
     fi
@@ -560,7 +593,9 @@ function cdff()
     target=$(fd --type d --hidden --follow \
         | fzf --reverse \
               --preview "ls {}" \
-              --preview-window down)
+              --preview-window down \
+              --header="cdff"
+    )
     if [[ -n $target ]]; then
         cd "$target" || return
     fi
