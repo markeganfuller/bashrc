@@ -601,6 +601,22 @@ function cdff()
     fi
 }
 
+# fzf CD scratchpads (jumps to scratchpads first and searches from there)
+function cds()
+{
+    builtin cd "${HOME}/scratchpads" || return
+    target=$(fd --type d --hidden --follow \
+        | fzf --reverse \
+              --preview "ls {}" \
+              --preview-window down \
+              --header="cds"
+    )
+    if [[ -n $target ]]; then
+        cd "$target" || return
+    fi
+}
+
+
 # fzf vim
 function vf()
 {
