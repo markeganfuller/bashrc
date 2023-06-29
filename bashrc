@@ -753,6 +753,15 @@ function gwt_clone() {
     gwt_branch "$main_branch_name"
 }
 
+# Open in browser
+function oib {
+    if [[ $# -gt 0 ]]; then
+        firefox "file://${PWD}/${1}"
+    else
+        firefox "file://${PWD}"
+    fi
+}
+
 # -----------------------------------------------------------------------------
 # Finally load any local config (Used for machine or work specific stuff)
 if [[ -e "${HOME}/.bashrc_local" ]]; then
