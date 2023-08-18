@@ -86,7 +86,6 @@ shopt -s checkwinsize
 TERM=xterm-256color
 
 # Check dotfiles for local changes (only happens on first run) ----------------
-
 function check_git_dir(){
     dir=$1
 
@@ -737,6 +736,14 @@ function gwt_clone() {
 
     git checkout -b z_dummy_worktree_branch_z
     gwt_branch "$main_branch_name"
+}
+
+function gwt_rm() {
+    # Assumes you're in a worktree git repo, and not in the branch you're deleting
+    # Doesn't handle force removal
+    local branch=$1
+    git worktree remove "$1"
+    git branch -d "$1"
 }
 
 # Open in browser
