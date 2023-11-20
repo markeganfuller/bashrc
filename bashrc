@@ -663,13 +663,46 @@ function h() {
     echo "$command"
 }
 
-# Shortcut to list worktrees, with some color
+# Shortcut to list worktrees, with some color and PR status
 function gwt(){
-    # Hide dummy branch
-    # Color branch
-    git worktree list \
-        | grep -v z_dummy_worktree_branch_z \
-        | sed -e "s/\[/${C_S_YELLOW}/" -e "s/\]/${C_S_CLR}/"
+    while IFS= read -r line; do
+        # Extract branch name
+        branch=$(echo "$line" | sed 's/.*\[//' | sed 's/\]//' )
+        # Color branch in line
+        line=$(echo "$line" |  sed -e "s/\[/${C_S_YELLOW}/" -e "s/\]/${C_S_CLR}/")
+        # Get PR status
+        pr_status=$(gh pr view "${branch}" --json state --jq .state 2>/dev/null)
+        pr_status=${pr_status:-NONE}
+
+        # Color PR status
+        case $pr_status in
+            OPEN)
+                pr_status=${C_GREEN}${pr_status}${C_CLR}
+                ;;
+            CLOSED)
+                pr_status=${C_RED}${pr_status}${C_CLR}
+                ;;
+            MERGED)
+                pr_status=${C_RED}${pr_status}${C_CLR}
+                ;;
+            NONE)
+                pr_status=${C_BLUE}${pr_status}${C_CLR}
+                ;;
+            *)
+                pr_status=${C_MAGENTA}${pr_status}${C_CLR}
+                ;;
+        esac
+
+        # No PR status for main
+        if [[ $branch == 'main' ]]; then
+            echo "$line"
+        # Hide z_dummy_worktree_branch_z
+        elif [[ $branch == 'z_dummy_worktree_branch_z' ]]; then
+            true
+        else
+            echo -e "$line $pr_status"
+        fi
+    done <<< "$(git worktree list)"
 }
 
 # CD to main/master (default) branch for worktree
