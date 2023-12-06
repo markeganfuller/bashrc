@@ -216,6 +216,12 @@ function __prompt_command() {
     PS1+="\\W"
     PS1+="${C_P_RED}\$${C_P_CLR}"
     PS1+=" "
+
+    # Ding to say command is done
+    # Background to not block, Subshell to eat job control messages
+    if [[ $DING_ON_COMMAND_COMPLETE -eq 1 ]]; then
+        ( paplay /usr/share/sounds/freedesktop/stereo/complete.oga & )
+    fi
 }
 
 # Set up editor ---------------------------------------------------------------
@@ -272,6 +278,9 @@ alias sshp="ssh -o PreferredAuthentications=keyboard-interactive,password -o Pub
 # SSH to ciscos
 alias sshcis="ssh -o Kexalgorithms=+diffie-hellman-group14-sha1,diffie-hellman-group1-sha1 -o Hostkeyalgorithms=+ssh-dss,ssh-rsa -o PubkeyAcceptedAlgorithms=+ssh-rsa -o Ciphers=+aes256-cbc -o Pubkeyauthentication=no -a"
 alias serial_conn='screen /dev/ttyUSB0 9600,cs8'
+
+# Remove all docker containers
+alias docker_rm_containers="docker rm -f \$(docker ps -a -q)"
 
 # Audio alert for when a long running task finishes
 alias bp='spd-say "Alert: Command ended, Exit code: $?"'
@@ -786,6 +795,12 @@ function oib {
     else
         firefox "file://${PWD}"
     fi
+}
+
+
+# Get shell on a docker container
+function dshell {
+    docker exec -it "$1" bash
 }
 
 # -----------------------------------------------------------------------------
