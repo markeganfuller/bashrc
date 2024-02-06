@@ -290,6 +290,8 @@ alias bp='spd-say "Alert: Command ended, Exit code: $?"'
 # Grep: Ignore .git dirs and enable color
 alias grep="grep --exclude-dir=.git --color=auto"
 alias ggrep="git grep"
+# Find usage of puppet module via ggrep
+alias find_module="ggrep -inr -E '(include |class[ {])' -- '*.pp' | grep "
 
 alias ipython="ipython --no-confirm-exit --no-banner --pprint"  # Make ipython nicer
 alias less="less -R"  # Fix colors in less
