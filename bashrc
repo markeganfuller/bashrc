@@ -812,6 +812,15 @@ function dshell {
     docker exec -it "$1" bash
 }
 
+# Autocomplete for dshell,
+# Wrap the docker completion to avoid passing extra args
+function __dshell_autocomplete {
+    source /usr/share/bash-completion/completions/docker
+    __docker_complete_containers_running "" "$2"
+}
+
+complete -F __dshell_autocomplete dshell
+
 # -----------------------------------------------------------------------------
 # Finally load any local config (Used for machine or work specific stuff)
 if [[ -e "${HOME}/.bashrc_local" ]]; then
