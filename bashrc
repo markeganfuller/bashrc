@@ -677,7 +677,7 @@ function h() {
 
     command=$(sqlite3 "${PERSISTENT_HIST_FILE}" \
         "SELECT DISTINCT command FROM history ORDER BY id DESC;" \
-        | FZF_DEFAULT_OPTS="--reverse --preview '. ~/.bashrc && h_preview {}' --preview-window down --no-mouse" fzf)
+        | FZF_DEFAULT_OPTS="--preview '. ~/.bashrc && h_preview {}' --preview-window down --no-mouse" fzf)
     echo "$command"
 }
 
