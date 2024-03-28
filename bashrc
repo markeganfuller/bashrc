@@ -424,8 +424,16 @@ function cdr() {
     )
 
     if [[ -n $target ]]; then
+        echo "$target" > ~/.cdr_last
         cd "$target" || return
     fi
+}
+
+# cdr last
+# quick way to get multiple terminals in the same place, cdr in one then cdrl the others
+function cdrl()
+{
+    cd "$(< ~/.cdr_last)" || return
 }
 
 function crontab()
