@@ -821,6 +821,7 @@ function dshell {
 }
 
 # Autocomplete for dshell,
+# Not currently working
 # Wrap the docker completion to avoid passing extra args
 function __dshell_autocomplete {
     source /usr/share/bash-completion/completions/docker
@@ -828,6 +829,13 @@ function __dshell_autocomplete {
 }
 
 complete -F __dshell_autocomplete dshell
+
+function vbox_rm_inaccessible {
+    vms=$(vboxmanage list vms \
+        | grep 'inaccessible' \
+        | sed 's/^.* {\(.*\)}.*$/\1/')
+    vboxmanage unregistervm "${vms}"
+}
 
 # -----------------------------------------------------------------------------
 # Finally load any local config (Used for machine or work specific stuff)
