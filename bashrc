@@ -831,10 +831,12 @@ function __dshell_autocomplete {
 complete -F __dshell_autocomplete dshell
 
 function vbox_rm_inaccessible {
-    vms=$(vboxmanage list vms \
+    vboxmanage list vms \
         | grep 'inaccessible' \
-        | sed 's/^.* {\(.*\)}.*$/\1/')
-    vboxmanage unregistervm "${vms}"
+        | sed 's/^.* {\(.*\)}.*$/\1/' \
+        | while read line ; do
+            vboxmanage unregistervm "${line}"
+        done
 }
 
 # -----------------------------------------------------------------------------
