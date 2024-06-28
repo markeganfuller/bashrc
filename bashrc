@@ -456,9 +456,9 @@ function todos()
 {
     # Search for TODO / XXX and print
     echo -e "\\n--- XXXs"
-    grep -nr 'XXX'
+    grep -Inr 'XXX'
     echo -e "\\n--- To Dos"
-    grep -nr 'TODO'
+    grep -Inr 'TODO'
     echo ""
 }
 
