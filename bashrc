@@ -805,6 +805,25 @@ function gwt_rm() {
     git branch -d "$1"
 }
 
+function grd_commits() {
+    local branch
+    local local_start
+    local local_end
+    local remote_start
+    local remote_end
+
+    branch=$(git rev-parse --abbrev-ref HEAD)
+
+    remote_start=$(git log "main..origin/${branch}" --format=%H | tail -1)
+    remote_end=$(git log "main..origin/${branch}" --format=%H -1)
+
+    local_start=$(git log main..HEAD --format=%H | tail -1)
+    local_end=$(git log main..HEAD --format=%H -1)
+
+    echo "REMOTE: ${remote_start}...${remote_end}"
+    echo "LOCAL: ${local_start}...${local_end}"
+}
+
 # Open in browser
 function oib {
     if [[ $# -gt 0 ]]; then
