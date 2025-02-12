@@ -836,21 +836,34 @@ function oib {
     fi
 }
 
+function dshell_preview() {
+    # some helper text
+    echo -e "${C_RED}'${C_CLR}exact | ${C_RED}^${C_CLR}prefix-exact | suffix-exact${C_RED}\$${C_CLR} | ${C_RED}!${C_CLR}inverse-exact | ${C_RED}!^${C_CLR}inverse-prefix-exact | ${C_RED}!${C_CLR}inverse-suffix-exact${C_RED}\$${C_CLR}"
+    echo -e "_______________________________________\n"
 
-# Get shell on a docker container
-function dshell {
-    docker exec -it "$1" bash
+    container="${*}"
+    docker container ls | grep "${container}" --color=no
 }
 
-# Autocomplete for dshell,
-# Not currently working
-# Wrap the docker completion to avoid passing extra args
-function __dshell_autocomplete {
-    source /usr/share/bash-completion/completions/docker
-    __docker_complete_containers_running "" "$2"
-}
+function dshell() {
+    # dshells dshell search (fzf dshell
+    export -f dshell_preview
 
-complete -F __dshell_autocomplete dshell
+    local ds_containers
+    ds_containers=$(docker container ls --format='table {{.Names}}' | tail -n +2)
+
+    target=$(printf "%s\n" "${ds_containers}" \
+        | fzf \
+            --preview-window down \
+            --delimiter='/' \
+            --nth=-2.. \
+            --no-sort \
+            --preview ". ~/.bashrc && dshell_preview {}" \
+            --header="dshell"
+    )
+
+    docker exec -it "$target" bash || return
+}
 
 function vbox_rm_inaccessible {
     vboxmanage list vms \
