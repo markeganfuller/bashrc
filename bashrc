@@ -314,9 +314,12 @@ function gitdiffpull() {
 
 function git_pr_message() {
     default_branch=$(git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@')
+    echo
     git log "${default_branch}..." --reverse --pretty=format:"%B" \
         | sed "s/^*/  */" \
-        | sed "s/^\([^ ]\)/* \1/"
+        | sed "s/^\([^ ]\)/* \1/" \
+        | sed -r '/^\s*$/d'
+    echo
 }
 
 # TODO: RVM breaks this because it has its own CD function
