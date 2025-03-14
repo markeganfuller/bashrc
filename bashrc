@@ -862,6 +862,7 @@ function dshell() {
             --header="dshell"
     )
 
+    clear
     docker exec -it "$target" bash || return
 }
 
