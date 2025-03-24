@@ -843,6 +843,7 @@ function dshell_preview() {
 
     container="${*}"
     docker container ls | grep "${container}" --color=no
+    docker exec -t "${container}" hostname -I
 }
 
 function dshell() {
