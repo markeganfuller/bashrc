@@ -498,6 +498,13 @@ function persistent-history()
         | grep "$SEARCH"
 }
 
+function rd()
+{
+    # Recent directories from persistent history
+    local limit=${1:-25}
+    sqlite3 "${PERSISTENT_HIST_FILE}" "SELECT DISTINCT pwd FROM history ORDER BY ID DESC LIMIT ${limit};"
+}
+
 function stc-search()
 {
     # TODO Use fzf with preview
